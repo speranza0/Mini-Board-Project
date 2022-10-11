@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpringBoot Board</title>
+    <link rel="shortcut icon" href="/assets/brand.png" />
+
+    <link href="http://fonts.cdnfonts.com/css/montserrat" rel="stylesheet" />
+    <link rel="stylesheet" href="/style/reset.css" />
+    <link rel="stylesheet" href="/style/common.css" />
+    <link rel="stylesheet" href="/style/page.css" />
+  </head>
+  <body>
+    <div id="auth">
+      <div class="wrap">
+        <section class="header">
+          <a class="brand" href="/">
+            <img src="/assets/brand.png" alt="" />
+            <span class="text"><span>SpringBoot</span> Board</span>
+          </a>
+        </section>
+        <section class="form">
+          <form id="joinForm">
+            <div class="form-description">
+              아래의 정보를 입력하여 회원가입을 해주세요.
+            </div>
+            <div class="form-section">
+              <div class="form-name">아이디<em></em></div>
+              <div class="form-field">
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="아이디"
+                  minlength="6"
+                  maxlength="20"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-name">비밀번호<em></em></div>
+              <div class="form-field">
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="비밀번호"
+                  minlength="6"
+                  maxlength="16"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <input
+                  type="password"
+                  name="repassword"
+                  placeholder="비밀번호 확인"
+                  minlength="6"
+                  maxlength="16"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-name">이메일<em></em></div>
+              <div class="form-field">
+                <input type="text" name="email" placeholder="이메일" required />
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-name">회원정보<em></em></div>
+              <div class="form-field">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="이름"
+                  maxlength="20"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <input
+                  type="text"
+                  name="nickname"
+                  placeholder="닉네임"
+                  maxlength="20"
+                  required
+                />
+              </div>
+              <div class="form-field">
+                <input type="text" name="phone" placeholder="연락처" required />
+              </div>
+            </div>
+
+            <div class="form-agree">
+              <label class="checkbox">
+                <input type="checkbox" name="agree" />
+                <span
+                  ><a href="#" target="_blank">이용약관</a> 및
+                  <a href="#" target="_blank">개인정보처리방침</a>에
+                  동의합니다.</span
+                >
+              </label>
+            </div>
+
+            <div class="form-action">
+              <button class="form-button" type="submit">회원가입</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/script/common.js"></script>
+  </body>
+</html>

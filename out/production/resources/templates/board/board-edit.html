@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpringBoot Board</title>
+    <link rel="shortcut icon" href="/assets/brand.png" />
+
+    <link
+      rel="stylesheet"
+      href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css"
+    />
+    <link href="http://fonts.cdnfonts.com/css/montserrat" rel="stylesheet" />
+    <link rel="stylesheet" href="/style/reset.css" />
+    <link rel="stylesheet" href="/style/common.css" />
+    <link rel="stylesheet" href="/style/page.css" />
+  </head>
+  <body>
+    <div id="root">
+      <header id="header">
+        <div class="container">
+          <div class="brand">
+            <a href="/">
+              <img src="/assets/brand.png" alt="" />
+              <span class="text"><span>SpringBoot</span> Board</span>
+            </a>
+          </div>
+          <nav class="nav">
+            <ul>
+              <li><a href="/board-list.html">공지사항</a></li>
+              <li>
+                <a href="/board-list.html">커뮤니티</a>
+              </li>
+              <li>
+                <a class="button" href="/login.html">로그인</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      <main id="main" class="board">
+        <div class="wrap">
+          <aside id="aside">
+            <div class="container">
+              <h2>공지사항</h2>
+            </div>
+          </aside>
+          <div id="page" class="board-edit">
+            <div class="container">
+              <div class="body">
+                <form id="postForm" novalidate="novalidate">
+                  <input type="hidden" name="boardIdx" value="1" />
+                  <input type="hidden" name="idx" value="" />
+                  <table class="form-table">
+                    <tbody>
+                      <tr>
+                        <th>제목<em>*</em></th>
+                        <td>
+                          <input
+                            class="input"
+                            type="text"
+                            name="subject"
+                            value=""
+                            data-name="제목"
+                            maxlength="255"
+                            required=""
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>내용<em>*</em></th>
+                        <td>
+                          <textarea
+                            class="textarea"
+                            id="editor"
+                            name="content"
+                            data-name="내용"
+                          ></textarea>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <th>첨부파일</th>
+                        <td>
+                          <div class="file">
+                            <div class="button">
+                              <label class="upload">
+                                <input id="file" type="file" name="file" />
+                                <span class="button">파일 선택</span>
+                              </label>
+                            </div>
+                            <div id="attach" class="attach">
+                              <div class="item" data-idx="122">
+                                <div class="data">
+                                  <div class="filename">
+                                    <a href="#">mariadb.png</a>
+                                    <input
+                                      type="hidden"
+                                      name="uploads"
+                                      value="122"
+                                    />
+                                  </div>
+                                  <div class="size">22 KB</div>
+                                </div>
+                                <div class="remove">
+                                  <svg viewBox="0 0 188 188">
+                                    <g>
+                                      <g>
+                                        <path
+                                          clip-rule="evenodd"
+                                          d="m121.564 67.959c1.851 1.85 1.851 4.85 0 6.701l-46.904 46.904c-1.85 1.851-4.85 1.851-6.701 0-1.85-1.851-1.85-4.85 0-6.701l46.905-46.905c1.85-1.849 4.85-1.849 6.7.001z"
+                                          fill-rule="evenodd"
+                                        ></path>
+                                      </g>
+                                      <g>
+                                        <path
+                                          clip-rule="evenodd"
+                                          d="m67.959 67.959c1.85-1.85 4.85-1.85 6.701 0l46.905 46.904c1.851 1.851 1.851 4.851 0 6.702-1.851 1.85-4.85 1.85-6.701 0l-46.905-46.905c-1.85-1.85-1.85-4.85 0-6.701z"
+                                          fill-rule="evenodd"
+                                        ></path>
+                                      </g>
+                                      <g>
+                                        <path
+                                          clip-rule="evenodd"
+                                          d="m94.762 180.048c47.102 0 85.286-38.183 85.286-85.286 0-47.102-38.183-85.286-85.286-85.286-47.102 0-85.286 38.184-85.286 85.286s38.184 85.286 85.286 85.286zm0 9.476c52.335 0 94.762-42.427 94.762-94.762 0-52.336-42.427-94.762-94.762-94.762-52.336 0-94.762 42.426-94.762 94.762 0 52.335 42.426 94.762 94.762 94.762z"
+                                          fill-rule="evenodd"
+                                        ></path>
+                                      </g>
+                                    </g>
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="form-action">
+                    <div class="action">
+                      <a class="button" href="#">취소</a>
+                      <button class="button black" type="submit">등록</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer id="footer">
+        <div class="container">
+          <div class="informarion">
+            <span><em>SpringBoot Board</em></span>
+            <span>Developer <em>Park</em></span>
+            <span>email <em>speranza0p@gmail.com</em></span>
+          </div>
+          <div class="bar">
+            <div class="copyright">
+              Copyright © StringBoot Board All Rights Reserved.
+            </div>
+            <div class="policy">
+              <ul class="links">
+                <li>
+                  <a href="#" target="_blank">Github</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/script/common.js"></script>
+  </body>
+</html>
