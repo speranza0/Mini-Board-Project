@@ -2,10 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.board.webmvc.service.user.UserMapper">
     <select id="login" resultType="com.board.webmvc.service.user.UserVO">
-        SELECT * FROM tb_user WHERE user_id = #{userid}
+        SELECT * FROM tb_user WHERE id = #{id}
     </select>
 
-    <select id="selectUserList" resultType="com.board.webmvc.service.user.UserVO">
-        SELECT * FROM tb_user
+    <select id="selectUserList" resultType="String">
+        SELECT id FROM tb_user
     </select>
+
+    <insert id="joinUser" parameterType="com.board.webmvc.service.user.UserVO">
+        INSERT INTO tb_user (id, level, password, email, name, nickname, phone, regdate) VALUES (#{id}, 2, #{password}, #{email}, #{name}, #{nickname}, #{phone}, now())
+    </insert>
 </mapper>

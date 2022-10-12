@@ -17,7 +17,7 @@ public class UserApplicationTests {
 
     @Test
     public void contextLoads() {
-        List<UserVO> list = userMapper.selectUserList();
-        log.info("list = {}", list.get(0).getUserId());
+        String user = userMapper.selectUserList();
+        log.info("user = {}", user);
     }
 }

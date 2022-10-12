@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SpringBoot Board</title>
     <link rel="shortcut icon" href="/assets/brand.png" />
-
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css"/>
     <link href="http://fonts.cdnfonts.com/css/montserrat" rel="stylesheet" />
     <link rel="stylesheet" href="/style/reset.css" />
     <link rel="stylesheet" href="/style/common.css" />
@@ -24,12 +25,21 @@
           </div>
           <nav class="nav">
             <ul>
+              <li th:if="${session.loginUser != null}"><a href="#" th:text="${session.loginUser.getNickname()} + '님 환영합니다.'"></a>
               <li><a href="/board-list.html">공지사항</a></li>
               <li>
                 <a href="/board-list.html">커뮤니티</a>
               </li>
               <li>
-                <a class="button" href="/user/login">로그인</a>
+                <div class="user" th:if="${session.loginUser != null}">
+                  <a class="dropdown-toggle" href="#"
+                    ><i class="mdi mdi-account-circle"></i>관리자</a
+                  >
+                  <ul class="dropdown">
+                    <li><a href="/user/logout">로그아웃</a></li>
+                  </ul>
+                </div>
+                <a th:if="${session.loginUser == null}" class="button" href="/user/login">로그인</a>
               </li>
             </ul>
           </nav>

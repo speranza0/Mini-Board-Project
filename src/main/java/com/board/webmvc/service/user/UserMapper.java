@@ -1,13 +1,16 @@
 package com.board.webmvc.service.user;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface UserMapper {
 
-    UserVO login(String userId);
+    UserVO login(String id);
 
-    List<UserVO> selectUserList();
+    String selectUserList();
+
+    void joinUser(UserVO user);
 }

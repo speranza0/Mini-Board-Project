@@ -1,31 +1,30 @@
 package com.board.webmvc.service.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
 public class UserVO {
 
-    private int userIdx;
+    private int idx;
 
-    private String userId;
+    private String id;
 
-    private int userLevel;
+    private int level;
 
-    private String userPassword;
+    private String password;
 
-    private String userEmail;
+    private String email;
 
-    private String userName;
+    private String name;
 
-    private String userNickname;
+    private String nickname;
+
+    private String phone;
 
     private String latestLogin;
 
-    private String regDate;
+    private String regdate;
 
 }

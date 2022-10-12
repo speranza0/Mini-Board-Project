@@ -22,7 +22,7 @@
           </a>
         </section>
         <section class="form">
-          <form id="joinForm">
+          <form id="joinForm" method="post" action="/user/join" onsubmit="return joinSubmit()">
             <div class="form-description">
               아래의 정보를 입력하여 회원가입을 해주세요.
             </div>
@@ -31,7 +31,7 @@
               <div class="form-field">
                 <input
                   type="text"
-                  name="username"
+                  name="id"
                   placeholder="아이디"
                   minlength="6"
                   maxlength="20"
@@ -98,12 +98,11 @@
 
             <div class="form-agree">
               <label class="checkbox">
-                <input type="checkbox" name="agree" />
-                <span
-                  ><a href="#" target="_blank">이용약관</a> 및
+                <input type="checkbox" id="agree" name="agree"/>
+                <span>
+                  <a href="#" target="_blank">이용약관</a> 및
                   <a href="#" target="_blank">개인정보처리방침</a>에
-                  동의합니다.</span
-                >
+                  동의합니다.</span>
               </label>
             </div>
 
@@ -117,8 +116,19 @@
     <script
       src="https://code.jquery.com/jquery-3.6.1.min.js"
       integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
     <script src="/script/common.js"></script>
+    <script>
+      function joinSubmit() {
+        if($("#agree").is(':checked') == true) {
+          $("#joinForm").submit();
+          return true;
+        } else {
+          alert("이용약관을 확인하시고 동의 체크를 눌러주세요.");
+          $("#agree").focus();
+          return false;
+        }
+      }
+    </script>
   </body>
 </html>
