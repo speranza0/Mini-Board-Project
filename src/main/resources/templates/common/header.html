@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<th:block th:fragment="header">
+<header id="header">
+    <div class="container">
+        <div class="brand">
+            <a href="/">
+                <img src="/assets/brand.png" alt="" />
+                <span class="text"><span>SpringBoot</span> Board</span>
+            </a>
+        </div>
+        <nav class="nav">
+            <ul>
+                <li th:if="${session.loginUser != null}"><a href="#" th:text="${session.loginUser.getNickname()} + '님 환영합니다.'"></a>
+                <li><a href="/board/list">공지사항</a></li>
+                <li>
+                    <a href="/board/list">커뮤니티</a>
+                </li>
+                <li>
+                    <div class="user" th:if="${session.loginUser != null}">
+                        <a class="dropdown-toggle" href="#"
+                        ><i class="mdi mdi-account-circle"></i>관리자</a
+                        >
+                        <ul class="dropdown">
+                            <li><a href="/user/logout">로그아웃</a></li>
+                        </ul>
+                    </div>
+                    <a th:if="${session.loginUser == null}" class="button" href="/user/login">로그인</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+</th:block>
+</html>

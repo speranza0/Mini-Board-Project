@@ -10,6 +10,6 @@
     </select>
 
     <insert id="joinUser" parameterType="com.board.webmvc.service.user.UserVO">
-        INSERT INTO tb_user (id, level, password, email, name, nickname, phone, regdate) VALUES (#{id}, 2, #{password}, #{email}, #{name}, #{nickname}, #{phone}, now())
+        INSERT INTO tb_user (id, level, password, email, name, nickname, phone, regdate) VALUES (#{id}, 10, #{password}, #{email}, #{name}, #{nickname}, #{phone}, now())
     </insert>
 </mapper>

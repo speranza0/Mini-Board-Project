@@ -23,7 +23,7 @@
         </section>
         <section class="form">
           <form id="loginForm" method="post" action="/user/login">
-            <div th:if="${joinUser != null}"><p th:text="${joinUser.getId()} + '님 가입을 환영합니다.'"></p></div>
+            <div th:if="${exception != null}"><p th:text="${exception}"></p></div>
             <div class="form-field">
               <input
                 id="id"
@@ -68,5 +68,14 @@
       crossorigin="anonymous"
     ></script>
     <script src="/script/common.js"></script>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      var isJoin=/*[[${joinUser != null}]]*/ || false;
+      var userName = /*[[${joinUser != null ? joinUser.getId() : ''}]]*/ || "";
+      if(isJoin) {
+        alert(userName + '님 가입을 환영합니다.');
+      }
+      /*]]>*/
+    </script>
   </body>
 </html>

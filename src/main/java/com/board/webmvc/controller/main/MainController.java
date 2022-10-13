@@ -15,11 +15,6 @@ public class MainController {
 
     @GetMapping("/")
     public String main(@SessionAttribute(name = "loginUser", required = false) UserVO loginUser, Model model) {
-        //세션에 회원 데이터가 없으면 로그인으로
-        if(loginUser == null) {
-            return "index";
-        }
-
         //세션 유지
         model.addAttribute("loginUser", loginUser);
         return "index";

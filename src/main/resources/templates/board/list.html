@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<th:block th:replace="common/head" :: head></th:block>
+  <body>
+    <div id="root">
+      <th:block th:replace="common/header" :: header></th:block>
+      <main id="main" class="board">
+        <div class="wrap">
+          <aside id="aside">
+            <div class="container">
+              <h2>공지사항</h2>
+            </div>
+          </aside>
+          <div id="page" class="board-list">
+            <div class="container">
+              <div class="head">
+                <div class="navigator">
+                  <div class="meta">
+                    총 게시물 <b>87</b>개 (현재 <b>1</b>/5 페이지)
+                  </div>
+                  <div class="search">
+                    <form>
+                      <input
+                        type="text"
+                        name="query"
+                        value=""
+                        placeholder="검색어를 입력하세요."
+                      />
+                      <button type="submit">검색</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="body">
+                <div class="list">
+                  <table class="rows">
+                    <thead>
+                      <tr>
+                        <th class="num">번호</th>
+                        <th class="subject">제목</th>
+                        <th class="writer">작성자</th>
+                        <th class="created">등록일</th>
+                        <th class="hit">조회</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="num">87</td>
+                        <td class="subject">
+                          <a href="/board/detail">
+                            <span class="text">
+                              [선정결과] 2022년 지구를 위한 탄소다이어트 9월
+                              지원사업 선정결과 공고
+                            </span>
+                            <span class="icon"> </span>
+                          </a>
+                        </td>
+                        <td class="writer">대전환경교육센터</td>
+                        <td class="created">2022-09-28</td>
+                        <td class="hit">42</td>
+                      </tr>
+                      <tr>
+                        <td class="num">86</td>
+                        <td class="subject">
+                          <a href="/post/notice/374">
+                            <span class="text">
+                              [모집] ⌜2022년 환경교육전문가 6차 역량강화교육⌟
+                              ‘성인중기·후기 환경교육강사...
+                            </span>
+                            <span class="icon">
+                              <svg viewBox="0 0 469.333 469.333">
+                                <g>
+                                  <g xmlns="http://www.w3.org/2000/svg">
+                                    <g>
+                                      <g>
+                                        <path
+                                          d="M466.208,88.458L380.875,3.125c-2-2-4.708-3.125-7.542-3.125H42.667C19.146,0,0,19.135,0,42.667v384     c0,23.531,19.146,42.667,42.667,42.667h384c23.521,0,42.667-19.135,42.667-42.667V96     C469.333,93.167,468.208,90.458,466.208,88.458z M106.667,21.333h234.667v128c0,11.76-9.563,21.333-21.333,21.333H128     c-11.771,0-21.333-9.573-21.333-21.333V21.333z M384,448H85.333V256H384V448z M448,426.667c0,11.76-9.563,21.333-21.333,21.333     h-21.333V245.333c0-5.896-4.771-10.667-10.667-10.667h-320c-5.896,0-10.667,4.771-10.667,10.667V448H42.667     c-11.771,0-21.333-9.573-21.333-21.333v-384c0-11.76,9.563-21.333,21.333-21.333h42.667v128C85.333,172.865,104.479,192,128,192     h192c23.521,0,42.667-19.135,42.667-42.667v-128h6.25L448,100.417V426.667z"
+                                          fill="#979797"
+                                          data-original="#000000"
+                                          class=""
+                                        ></path>
+                                        <path
+                                          d="M266.667,149.333h42.667c5.896,0,10.667-4.771,10.667-10.667V53.333c0-5.896-4.771-10.667-10.667-10.667h-42.667     c-5.896,0-10.667,4.771-10.667,10.667v85.333C256,144.562,260.771,149.333,266.667,149.333z M277.333,64h21.333v64h-21.333V64z"
+                                          fill="#979797"
+                                          data-original="#000000"
+                                          class=""
+                                        ></path>
+                                      </g>
+                                    </g>
+                                  </g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                  <g xmlns="http://www.w3.org/2000/svg"></g>
+                                </g>
+                              </svg>
+                            </span>
+                          </a>
+                        </td>
+                        <td class="writer">대전환경교육센터</td>
+                        <td class="created">2022-09-22</td>
+                        <td class="hit">119</td>
+                      </tr>
+                      <tr th:each="postList : ${postList}">
+                        <td class="num"></td>
+                        <td class="subject">
+                          <a href="/board/detail">
+                            <span class="text" th:text="${postList.getTitle()}">
+                            </span>
+                            <span class="icon"> </span>
+                          </a>
+                        </td>
+                        <td class="writer"></td>
+                        <td class="created" th:text="${postList.getRegdate()}"></td>
+                        <td class="hit" th:text="${postList.getHit()}"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="foot">
+                <div class="action">
+                  <a class="link" href="/board/edit">글쓰기</a>
+                </div>
+                <div class="more">
+                  <ul class="pagination">
+                    <li class="page-item">
+                      <a class="page-link" href="javascript:;"
+                        ><i class="mdi mdi-chevron-double-left"></i
+                      ></a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="javascript:;"
+                        ><i class="mdi mdi-chevron-left"></i
+                      ></a>
+                    </li>
+                    <li class="active page-item">
+                      <a class="page-link" href="?page=1">1</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page=2">2</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page=3">3</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page=4">4</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page=5">5</a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link paginator-next" href="?page=2"
+                        ><i class="mdi mdi-chevron-right"></i
+                      ></a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page=5"
+                        ><i class="mdi mdi-chevron-double-right"></i
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <th:block th:replace="common/footer" :: footer></th:block>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/script/common.js"></script>
+  </body>
+</html>

@@ -5,6 +5,7 @@ import com.board.webmvc.service.user.UserService;
 import com.board.webmvc.service.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @GetMapping("/login")
     public String loginView() {
@@ -35,23 +39,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute UserVO user, BindingResult bindingResult, HttpServletRequest request) {
-        if(bindingResult.hasErrors()) {
+    public String login(@Validated @ModelAttribute UserVO user, Model model, HttpServletRequest request) {
+
+        try {
+            UserVO loginUser = userService.login(user.getId(), user.getPassword());
+            HttpSession session = request.getSession();
+            session.setAttribute("loginUser", loginUser);
+            return "redirect:/";
+        } catch (RuntimeException e) {
+            model.addAttribute("exception", e.getMessage());
             return "user/login";
         }
-        UserVO loginUser = userService.login(user.getId());
-        log.info("id = {}", user.getId());
-        log.info("pw = {}", user.getPassword());
-        log.info("login = {}", loginUser);
-
-        if(loginUser == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "user/login";
-        }
-
-        HttpSession session = request.getSession();
-        session.setAttribute("loginUser", loginUser);
-        return "redirect:/";
     }
 
     @GetMapping("/logout")
