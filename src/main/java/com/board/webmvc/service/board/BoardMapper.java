@@ -7,7 +7,9 @@ import java.util.ArrayList;
 @Mapper
 public interface BoardMapper {
 
-    ArrayList<PostVO> postList(PostVO param);
+    ArrayList<PostVO> postList(PostVO postVO);
 
-    void postWrite(PostVO param);
+    PostVO postView(PostVO postVO);
+
+    void postWrite(PostVO postVO);
 }

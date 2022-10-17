@@ -6,6 +6,10 @@
         SELECT title, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx
     </select>
 
+    <select id="postView" resultType="com.board.webmvc.service.board.PostVO">
+        SELECT tbp.idx, title, content, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx
+    </select>
+
     <insert id="postWrite" parameterType="com.board.webmvc.service.board.PostVO">
         INSERT INTO tb_post(board_idx, user_idx, title, content, regdate, hit) VALUES (#{boardIdx}, #{userIdx}, #{title}, #{content}, now(), 0)
     </insert>

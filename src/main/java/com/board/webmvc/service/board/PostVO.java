@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
@@ -20,9 +22,13 @@ public class PostVO {
 
     private String content;
 
-    private String regdate;
+    private Date regdate;
 
-    private String updatetime;
+    private Date updatetime;
 
     private int hit;
+
+    private String id;
+
+    private String nickname;
 }

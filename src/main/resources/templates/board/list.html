@@ -115,14 +115,14 @@
                       <tr th:each="postList : ${postList}">
                         <td class="num"></td>
                         <td class="subject">
-                          <a href="/board/detail">
+                          <a th:href="@{/board/detail(idx=${postList.getIdx()})}">
                             <span class="text" th:text="${postList.getTitle()}">
                             </span>
                             <span class="icon"> </span>
                           </a>
                         </td>
-                        <td class="writer"></td>
-                        <td class="created" th:text="${postList.getRegdate()}"></td>
+                        <td class="writer" th:text="${postList.getNickname()}"></td>
+                        <td class="created" th:text="${#dates.format(postList.getRegdate(), 'yyyy-MM-dd')}"></td>
                         <td class="hit" th:text="${postList.getHit()}"></td>
                       </tr>
                     </tbody>

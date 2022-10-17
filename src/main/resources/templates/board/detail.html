@@ -14,15 +14,13 @@
           <div id="page" class="board-detail">
             <div class="container">
               <div class="head">
-                <div class="subject">
-                  [선정결과] 2022년 지구를 위한 탄소다이어트 9월 지원사업
-                  선정결과 공고
+                <div class="subject" th:text="${detailView.getTitle()}">
                 </div>
                 <div class="meta">
                   <ul>
-                    <li>대전환경교육센터</li>
-                    <li>2022-09-28</li>
-                    <li>조회수 : 42</li>
+                    <li th:text="${detailView.getNickname()}">대전환경교육센터</li>
+                    <li th:text="${#dates.format(detailView.getRegdate(), 'yyyy-MM-dd')}">2022-09-28</li>
+                    <li th:text="${detailView.getHit()}">조회수 : 42</li>
                   </ul>
                 </div>
               </div>
@@ -82,15 +80,15 @@
                 </ul>
               </div>
               <div class="contents">
-                <div class="smart-editor-view">내용</div>
+                <div class="smart-editor-view" th:text="${detailView.getContent()}">내용</div>
               </div>
 
               <div class="action">
                 <button class="button">삭제</button>
-                <a class="button" href="/post/notice/edit/377">수정</a>
+                <a class="button" th:href="@{/board/update(idx=${detailView.getIdx()})}">수정</a>
                 <a
                   class="button black"
-                  href="http://djeecp.com/post/notice?page=1"
+                  href="/board/list"
                   >목록</a
                 >
               </div>

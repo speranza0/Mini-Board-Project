@@ -16,17 +16,17 @@
               <div class="body">
                 <form id="postForm" novalidate="novalidate" method="post" action="/board/edit">
                   <input type="hidden" name="boardIdx" th:value="1" />
-                  <input type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
+                  <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
                     <tbody>
                       <tr>
                         <th>제목<em>*</em></th>
                         <td>
-                          <input
+                          <input th:if="${detailView}"
                             class="input"
                             type="text"
                             name="title"
-                            value=""
+                            th:value="${detailView.getTitle()}"
                             data-name="제목"
                             maxlength="255"
                             required=""
@@ -36,10 +36,11 @@
                       <tr>
                         <th>내용<em>*</em></th>
                         <td>
-                          <textarea
+                          <textarea th:if="${detailView}"
                             class="textarea"
                             id="editor"
                             name="content"
+                            th:text="${detailView.getContent()}"
                             data-name="내용"
                           ></textarea>
                         </td>
@@ -105,7 +106,8 @@
                   <div class="form-action">
                     <div class="action">
                       <a class="button" href="/board/cancel">취소</a>
-                      <button class="button black" type="submit">등록</button>
+                      <button th:if="${detailView}" class="button black" type="submit">수정</button>
+                      <button th:unless="${detailView}" class="button black" type="submit">등록</button>
                     </div>
                   </div>
                 </form>

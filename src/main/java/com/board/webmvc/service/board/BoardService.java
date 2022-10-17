@@ -15,6 +15,10 @@ public class BoardService {
         return boardMapper.postList(param);
     }
 
+    public PostVO postView(PostVO param) {
+        return boardMapper.postView(param);
+    }
+
     public void postWrite(PostVO param) {
         boardMapper.postWrite(param);
     }
