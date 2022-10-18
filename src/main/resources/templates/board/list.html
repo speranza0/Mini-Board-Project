@@ -137,7 +137,7 @@
                       ></a>
                     </li>
                     <li class="page-item" th:each="i : ${#numbers.sequence(searchVO.startData, searchVO.endData)}">
-                      <a class="page-link" th:href="@{/board/list(pageIndex=${i})}" th:text="${i}"></a>
+                      <a class="page-link" th:href="@{/board/list(pageIndex=${i})}" th:text="${i}" th:title="${i}"></a>
                     </li>
                     <li class="page-item">
                       <a class="page-link paginator-next" th:href="@{/board/list(pageIndex=${searchVO.endData + 1})}"
@@ -170,7 +170,6 @@
     <script th:inline="javascript">
       /*<![CDATA[*/
       $(document).ready(function() {
-
         var thisIndex = /*[[${searchVO.pageIndex}]]*/
         $(".pagination li a").each(function () {
           var idx = $(this).parent().index();
