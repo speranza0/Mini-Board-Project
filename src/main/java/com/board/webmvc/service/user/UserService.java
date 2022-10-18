@@ -33,4 +33,8 @@ public class UserService {
         user.setPassword(password);
         userMapper.joinUser(user);
     }
+
+    public void updateLatestLogin(int userIdx) {
+        userMapper.updateLatestLogin(userIdx);
+    }
 }

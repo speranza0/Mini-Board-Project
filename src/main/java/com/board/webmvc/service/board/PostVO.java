@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-public class PostVO {
+public class PostVO extends PageVO{
 
     private int idx;
 
@@ -31,4 +31,8 @@ public class PostVO {
     private String id;
 
     private String nickname;
+
+    private String searchType;
+
+    private String searchValue;
 }

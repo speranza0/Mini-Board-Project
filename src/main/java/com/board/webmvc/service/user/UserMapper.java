@@ -13,4 +13,6 @@ public interface UserMapper {
     String selectUserList();
 
     void joinUser(UserVO user);
+
+    void updateLatestLogin(int userIdx);
 }

@@ -1,6 +1,7 @@
 package com.board.webmvc.controller.board;
 
 import com.board.webmvc.service.board.BoardService;
+import com.board.webmvc.service.board.Pagination;
 import com.board.webmvc.service.board.PostVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,36 @@ public class BoardController {
 
     @GetMapping("/list")
     public String listView(PostVO postVO, Model model) {
+        //페이징[s]
+        Pagination pagination = new Pagination();
+        pagination.setCurrentPageNo(postVO.getPageIndex());
+        pagination.setRecordCountPerPage(postVO.getPageUnit());
+        pagination.setPageSize(postVO.getPageSize());
+
+        postVO.setFirstIndex(pagination.getFirstRecordIndex());
+        postVO.setRecordCountPerPage(pagination.getRecordCountPerPage());
+
+        int totCnt = boardService.getListCnt(postVO);
+
+        pagination.setTotalRecordCount(totCnt);
+
+        postVO.setEndData(pagination.getLastPageNoOnPageList());
+        postVO.setStartData(pagination.getFirstPageNoOnPageList());
+        postVO.setPrev(pagination.getXprev());
+        postVO.setNext(pagination.getXnext());
+
+        model.addAttribute("searchVO", postVO);
         model.addAttribute("postList", boardService.postList(postVO));
+        model.addAttribute("totCnt",totCnt);
+        model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)postVO.getPageUnit()));
+        model.addAttribute("pagination",pagination);
+        //페이징[e]
         return "board/list";
     }
 
     @GetMapping("/detail")
     public String detailView(PostVO postVO, Model model) {
+        boardService.updateViewCnt(postVO.getIdx());
         PostVO detailView = boardService.postView(postVO);
         if(detailView == null) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
@@ -50,11 +75,23 @@ public class BoardController {
     public String updateView(PostVO postVO, Model model) {
         PostVO detailView = boardService.postView(postVO);
         model.addAttribute("detailView", detailView);
-        return "board/edit";
+        return "board/update";
+    }
+
+    @PostMapping("/update")
+    public String update(PostVO postVO) {
+        boardService.postUpdate(postVO);
+        return "redirect:/board/detail/?idx=" + postVO.getIdx();
     }
 
     @GetMapping("/cancel")
     public String cancel() {
+        return "redirect:/board/list";
+    }
+
+    @GetMapping("/delete")
+    public String delete(PostVO postVO) {
+        boardService.deletePost(postVO.getIdx());
         return "redirect:/board/list";
     }
 }

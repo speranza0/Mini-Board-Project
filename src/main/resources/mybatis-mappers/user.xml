@@ -12,4 +12,8 @@
     <insert id="joinUser" parameterType="com.board.webmvc.service.user.UserVO">
         INSERT INTO tb_user (id, level, password, email, name, nickname, phone, regdate) VALUES (#{id}, 10, #{password}, #{email}, #{name}, #{nickname}, #{phone}, now())
     </insert>
+
+    <update id="updateLatestLogin">
+        UPDATE tb_user SET latest_login = now() WHERE idx = #{idx}
+    </update>
 </mapper>

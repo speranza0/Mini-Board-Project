@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.board.webmvc.service.board.BoardMapper">
+    <sql id="postSearch">
+        <if test="searchValue != null and searchValue != ''">
+            AND
+            (
+                ${searchType} like concat('%', #{searchValue}, '%')
+            )
+        </if>
+    </sql>
 
     <select id="postList" resultType="com.board.webmvc.service.board.PostVO">
-        SELECT title, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx
+        SELECT tbp.idx, title, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.delete_yn = "N"
+        <include refid="postSearch"/>
+        ORDER BY idx desc LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+    </select>
+
+    <select id="getListCnt" resultType="java.lang.Integer">
+        SELECT count(*) FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.delete_yn = "N"
+        <include refid="postSearch"/>
     </select>
 
     <select id="postView" resultType="com.board.webmvc.service.board.PostVO">
-        SELECT tbp.idx, title, content, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx
+        SELECT tbp.idx, title, content, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.idx = #{idx}
     </select>
 
     <insert id="postWrite" parameterType="com.board.webmvc.service.board.PostVO">
-        INSERT INTO tb_post(board_idx, user_idx, title, content, regdate, hit) VALUES (#{boardIdx}, #{userIdx}, #{title}, #{content}, now(), 0)
+        INSERT INTO tb_post(board_idx, user_idx, title, content, regdate, hit, delete_yn) VALUES (#{boardIdx}, #{userIdx}, #{title}, #{content}, now(), 0, "N")
     </insert>
+
+    <update id="postUpdate" parameterType="com.board.webmvc.service.board.PostVO">
+        UPDATE tb_post SET title = #{title}, content = #{content}, updatetime = now() WHERE idx = #{idx}
+    </update>
+
+    <update id="updateViewCnt">
+        UPDATE tb_post SET hit = hit + 1 WHERE idx = #{idx}
+    </update>
+
+    <update id="deletePost">
+        UPDATE tb_post SET delete_yn = "Y" WHERE idx = #{idx}
+    </update>
 </mapper>

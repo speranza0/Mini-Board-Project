@@ -18,9 +18,9 @@
                 </div>
                 <div class="meta">
                   <ul>
-                    <li th:text="${detailView.getNickname()}">대전환경교육센터</li>
-                    <li th:text="${#dates.format(detailView.getRegdate(), 'yyyy-MM-dd')}">2022-09-28</li>
-                    <li th:text="${detailView.getHit()}">조회수 : 42</li>
+                    <li th:text="${detailView.getNickname()}"></li>
+                    <li th:text="${#dates.format(detailView.getRegdate(), 'yyyy-MM-dd')}"></li>
+                    <li th:text="${detailView.getHit()}"></li>
                   </ul>
                 </div>
               </div>
@@ -84,7 +84,7 @@
               </div>
 
               <div class="action">
-                <button class="button">삭제</button>
+                <a class="button" th:href="@{/board/delete(idx=${detailView.getIdx()})}">삭제</a>
                 <a class="button" th:href="@{/board/update(idx=${detailView.getIdx()})}">수정</a>
                 <a
                   class="button black"

@@ -43,6 +43,7 @@ public class UserController {
 
         try {
             UserVO loginUser = userService.login(user.getId(), user.getPassword());
+            userService.updateLatestLogin(loginUser.getIdx());
             HttpSession session = request.getSession();
             session.setAttribute("loginUser", loginUser);
             return "redirect:/";

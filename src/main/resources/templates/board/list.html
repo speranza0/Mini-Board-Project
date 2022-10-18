@@ -16,13 +16,19 @@
               <div class="head">
                 <div class="navigator">
                   <div class="meta">
-                    총 게시물 <b>87</b>개 (현재 <b>1</b>/5 페이지)
+                    총 게시물 <b th:text="${totCnt}"></b>개 (현재 <b th:text="${searchVO.pageIndex}"></b> / <b th:text="${totalPageCnt}"/> 페이지)
                   </div>
                   <div class="search">
                     <form>
+                      <select name="searchType">
+                        <option value="0">선택</option>
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="nickname">작성자</option>
+                      </select>
                       <input
                         type="text"
-                        name="query"
+                        name="searchValue"
                         value=""
                         placeholder="검색어를 입력하세요."
                       />
@@ -44,21 +50,6 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td class="num">87</td>
-                        <td class="subject">
-                          <a href="/board/detail">
-                            <span class="text">
-                              [선정결과] 2022년 지구를 위한 탄소다이어트 9월
-                              지원사업 선정결과 공고
-                            </span>
-                            <span class="icon"> </span>
-                          </a>
-                        </td>
-                        <td class="writer">대전환경교육센터</td>
-                        <td class="created">2022-09-28</td>
-                        <td class="hit">42</td>
-                      </tr>
                       <tr>
                         <td class="num">86</td>
                         <td class="subject">
@@ -112,8 +103,8 @@
                         <td class="created">2022-09-22</td>
                         <td class="hit">119</td>
                       </tr>
-                      <tr th:each="postList : ${postList}">
-                        <td class="num"></td>
+                      <tr th:each="postList, iterator : ${postList}">
+                        <td class="num" th:text="${totCnt - ((searchVO.pageIndex -1) * 10 + iterator.index)}"></td>
                         <td class="subject">
                           <a th:href="@{/board/detail(idx=${postList.getIdx()})}">
                             <span class="text" th:text="${postList.getTitle()}">
@@ -136,37 +127,25 @@
                 <div class="more">
                   <ul class="pagination">
                     <li class="page-item">
-                      <a class="page-link" href="javascript:;"
+                      <a class="page-link" th:href="@{/board/list(pageIndex=1)}"
                         ><i class="mdi mdi-chevron-double-left"></i
                       ></a>
                     </li>
                     <li class="page-item">
-                      <a class="page-link" href="javascript:;"
+                      <a class="page-link" th:href="@{/board/list(pageIndex=${searchVO.startData - 1})}"
                         ><i class="mdi mdi-chevron-left"></i
                       ></a>
                     </li>
-                    <li class="active page-item">
-                      <a class="page-link" href="?page=1">1</a>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(searchVO.startData, searchVO.endData)}">
+                      <a class="page-link" th:href="@{/board/list(pageIndex=${i})}" th:text="${i}"></a>
                     </li>
                     <li class="page-item">
-                      <a class="page-link" href="?page=2">2</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="?page=3">3</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="?page=4">4</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link" href="?page=5">5</a>
-                    </li>
-                    <li class="page-item">
-                      <a class="page-link paginator-next" href="?page=2"
+                      <a class="page-link paginator-next" th:href="@{/board/list(pageIndex=${searchVO.endData + 1})}"
                         ><i class="mdi mdi-chevron-right"></i
                       ></a>
                     </li>
                     <li class="page-item">
-                      <a class="page-link" href="?page=5"
+                      <a class="page-link" th:href="@{/board/list(pageIndex=${totalPageCnt})}"
                         ><i class="mdi mdi-chevron-double-right"></i
                       ></a>
                     </li>
@@ -177,6 +156,9 @@
           </div>
         </div>
       </main>
+      <form method="get" id="listForm" action="/board/list">
+        <input type="hidden" id="pageIndex" name="pageIndex" val=""/>
+      </form>
       <th:block th:replace="common/footer" :: footer></th:block>
     </div>
     <script
@@ -185,5 +167,20 @@
       crossorigin="anonymous"
     ></script>
     <script src="/script/common.js"></script>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      $(document).ready(function() {
+
+        var thisIndex = /*[[${searchVO.pageIndex}]]*/
+        $(".pagination li a").each(function () {
+          var idx = $(this).parent().index();
+          var thistitle = $(this).attr("title");
+          if (thistitle == thisIndex) {
+            $(".pagination").find("li").eq(idx).addClass("active");
+          }
+        });
+      });
+      /*]]>*/
+    </script>
   </body>
 </html>

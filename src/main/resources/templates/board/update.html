@@ -14,8 +14,9 @@
           <div id="page" class="board-edit">
             <div class="container">
               <div class="body">
-                <form id="postForm" novalidate="novalidate" method="post" action="/board/edit">
+                <form id="postForm" novalidate="novalidate" method="post" action="/board/update">
                   <input type="hidden" name="boardIdx" th:value="1" />
+                  <input type="hidden" name="idx" th:value="${detailView.getIdx()}" />
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
                     <tbody>
@@ -26,7 +27,7 @@
                             class="input"
                             type="text"
                             name="title"
-                            value=""
+                            th:value="${detailView.getTitle()}"
                             data-name="제목"
                             maxlength="255"
                             required=""
@@ -40,6 +41,7 @@
                             class="textarea"
                             id="editor"
                             name="content"
+                            th:text="${detailView.getContent()}"
                             data-name="내용"
                           ></textarea>
                         </td>
@@ -105,7 +107,7 @@
                   <div class="form-action">
                     <div class="action">
                       <a class="button" href="/board/cancel">취소</a>
-                      <button class="button black" type="submit">등록</button>
+                      <button class="button black" type="submit">수정</button>
                     </div>
                   </div>
                 </form>
