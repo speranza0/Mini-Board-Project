@@ -1,9 +1,7 @@
 package com.board.webmvc.service.board;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -11,6 +9,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
+@Builder
 public class PostVO extends PageVO{
 
     private int idx;
@@ -36,4 +35,6 @@ public class PostVO extends PageVO{
     private String searchType;
 
     private String searchValue;
+
+    private MultipartFile uploadFile;
 }

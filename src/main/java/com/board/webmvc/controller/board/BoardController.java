@@ -1,10 +1,10 @@
 package com.board.webmvc.controller.board;
 
-import com.board.webmvc.service.board.BoardService;
-import com.board.webmvc.service.board.Pagination;
-import com.board.webmvc.service.board.PostVO;
+import com.board.webmvc.service.board.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.ServletException;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.SQLSyntaxErrorException;
 
 @Slf4j
@@ -21,6 +25,9 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private FileStore fileStore;
 
     @GetMapping("/list")
     public String listView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
@@ -51,13 +58,15 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public String detailView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
+    public String detailView(@ModelAttribute("searchVO") PostVO postVO, FileVO fileVO, Model model) {
         boardService.updateViewCnt(postVO.getIdx());
         PostVO detailView = boardService.postView(postVO);
+        FileVO fileView = boardService.postView_attach(fileVO);
         if(detailView == null) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
         }
         model.addAttribute("detailView", detailView);
+        model.addAttribute("fileView", fileView);
         return "board/detail";
     }
 
@@ -67,9 +76,27 @@ public class BoardController {
     }
 
     @PostMapping("/edit")
-    public String edit(PostVO postVO) {
+    public String edit(PostVO postVO, FileVO fileVO) throws ServletException, IOException {
+        log.info("filevo={}", fileVO);
+        FileVO vo = fileStore.uploadFile(fileVO.getUploadFile());
         boardService.postWrite(postVO);
+        if(vo != null) {
+            fileVO.setIdx(postVO.getIdx());
+            fileVO.setBoardIdx(postVO.getBoardIdx());
+            fileVO.setOriginname(vo.getOriginname());
+            fileVO.setPath(vo.getPath());
+            fileVO.setType(vo.getType());
+            fileVO.setSize(vo.getSize());
+            fileVO.setUuid(vo.getUuid());
+            boardService.postWrite_attach(fileVO);
+            log.info("post_idx={}", postVO.getIdx());
+        }
         return "redirect:/board/list";
+    }
+
+    @GetMapping("/attachFile")
+    public ResponseEntity<Resource> attachFile(FileVO param) throws MalformedURLException {
+        return fileStore.downloadAttach(param);
     }
 
     @GetMapping("/update")

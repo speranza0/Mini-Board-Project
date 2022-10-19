@@ -14,7 +14,7 @@
           <div id="page" class="board-edit">
             <div class="container">
               <div class="body">
-                <form id="postForm" novalidate="novalidate" method="post" action="/board/edit">
+                <form id="postForm" novalidate="novalidate" method="post" action="/board/edit" enctype="multipart/form-data">
                   <input type="hidden" name="boardIdx" th:value="1" />
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
@@ -51,7 +51,7 @@
                           <div class="file">
                             <div class="button">
                               <label class="upload">
-                                <input id="file" type="file" name="file" />
+                                <input id="file" type="file" name="file" oninput="filebox()"/>
                                 <span class="button">파일 선택</span>
                               </label>
                             </div>
@@ -59,14 +59,14 @@
                               <div class="item" data-idx="122">
                                 <div class="data">
                                   <div class="filename">
-                                    <a href="#">mariadb.png</a>
+                                    <a href="#"></a>
                                     <input
                                       type="hidden"
                                       name="uploads"
                                       value="122"
                                     />
                                   </div>
-                                  <div class="size">22 KB</div>
+                                  <div class="size"></div>
                                 </div>
                                 <div class="remove">
                                   <svg viewBox="0 0 188 188">
@@ -122,5 +122,15 @@
       crossorigin="anonymous"
     ></script>
     <script src="/script/common.js"></script>
+    <script>
+      function filebox() {
+        // var filename = $("#file")[0].files.length ? $("#file")[0].files[0].name : "";
+        var filename = $("#file").get(0).files[0].name;
+        var filesize = $("#file").get(0).files[0].size;
+        console.log(filename);
+        $(".filename a").html(filename);
+        $(".size").html(filesize + " Bytes");
+      }
+    </script>
   </body>
 </html>

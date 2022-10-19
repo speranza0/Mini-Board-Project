@@ -13,7 +13,13 @@ public interface BoardMapper {
 
     PostVO postView(PostVO postVO);
 
+    FileVO postView_attach(FileVO fileVO);
+
+    FileVO attachFileDown(FileVO fileVO);
+
     void postWrite(PostVO postVO);
+
+    void postWrite_attach(FileVO fileVO);
 
     void postUpdate(PostVO postVO);
 

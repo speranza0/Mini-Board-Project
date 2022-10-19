@@ -25,11 +25,11 @@
                 </div>
               </div>
               <div class="file">
-                <ul>
+                <ul th:if="${fileView}">
                   <li>
                     <a
                       class="link"
-                      href="/api/download/291QvWtl020ydukb207BGsZT71uB"
+                      th:href="@{/board/attachFile(uuid=${fileView.uuid})}"
                     >
                       <span class="icon">
                         <svg viewBox="0 0 469.333 469.333">
@@ -70,11 +70,10 @@
                           </g>
                         </svg>
                       </span>
-                      <span class="name"
-                        >(공고)2022-028 사회환경교육전문가 6차 역량강화교육
-                        공고.hwp</span
+                      <span class="name" th:text="${fileView.originname}.${fileView.type}"
+                        ></span
                       >
-                      <span class="size">80 KB</span>
+                      <span class="size" th:text="${fileView.size}"></span>
                     </a>
                   </li>
                 </ul>
