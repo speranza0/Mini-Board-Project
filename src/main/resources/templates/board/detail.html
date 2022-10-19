@@ -88,7 +88,7 @@
                 <a class="button" th:href="@{/board/update(idx=${detailView.getIdx()})}">수정</a>
                 <a
                   class="button black"
-                  href="/board/list"
+                  th:href="@{/board/list(pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
                   >목록</a
                 >
               </div>

@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.sql.SQLSyntaxErrorException;
 
 @Slf4j
 @Controller
@@ -21,7 +23,7 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping("/list")
-    public String listView(PostVO postVO, Model model) {
+    public String listView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
         //페이징[s]
         Pagination pagination = new Pagination();
         pagination.setCurrentPageNo(postVO.getPageIndex());
@@ -40,7 +42,6 @@ public class BoardController {
         postVO.setPrev(pagination.getXprev());
         postVO.setNext(pagination.getXnext());
 
-        model.addAttribute("searchVO", postVO);
         model.addAttribute("postList", boardService.postList(postVO));
         model.addAttribute("totCnt",totCnt);
         model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)postVO.getPageUnit()));
@@ -50,7 +51,7 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public String detailView(PostVO postVO, Model model) {
+    public String detailView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
         boardService.updateViewCnt(postVO.getIdx());
         PostVO detailView = boardService.postView(postVO);
         if(detailView == null) {
@@ -72,14 +73,14 @@ public class BoardController {
     }
 
     @GetMapping("/update")
-    public String updateView(PostVO postVO, Model model) {
+    public String updateView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
         PostVO detailView = boardService.postView(postVO);
         model.addAttribute("detailView", detailView);
         return "board/update";
     }
 
     @PostMapping("/update")
-    public String update(PostVO postVO) {
+    public String update(@ModelAttribute("searchVO") PostVO postVO) {
         boardService.postUpdate(postVO);
         return "redirect:/board/detail/?idx=" + postVO.getIdx();
     }
@@ -90,7 +91,7 @@ public class BoardController {
     }
 
     @GetMapping("/delete")
-    public String delete(PostVO postVO) {
+    public String delete(@ModelAttribute("searchVO") PostVO postVO) {
         boardService.deletePost(postVO.getIdx());
         return "redirect:/board/list";
     }
