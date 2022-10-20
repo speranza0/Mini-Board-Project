@@ -70,10 +70,10 @@
                           </g>
                         </svg>
                       </span>
-                      <span class="name" th:text="${fileView.originname}.${fileView.type}"
+                      <span class="name" th:text="${fileView.originname} + '.' + ${fileView.type}"
                         ></span
                       >
-                      <span class="size" th:text="${fileView.size}"></span>
+                      <span class="size" th:text="${fileView.size} + ' Bytes'"></span>
                     </a>
                   </li>
                 </ul>

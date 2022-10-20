@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Getter @Setter
 @Builder
-public class FileVO {
+public class FileVO extends PostVO{
 
     private int idx;
 
@@ -25,5 +25,5 @@ public class FileVO {
 
     private String path;
 
-    private MultipartFile uploadFile;
+
 }

@@ -24,8 +24,8 @@ public class BoardService {
         return boardMapper.postView(param);
     }
 
-    public FileVO postView_attach(FileVO param) {
-        return boardMapper.postView_attach(param);
+    public FileVO postView_attach(int postIdx) {
+        return boardMapper.postView_attach(postIdx);
     }
 
     public FileVO attachFileDown(FileVO param) {

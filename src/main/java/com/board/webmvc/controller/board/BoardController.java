@@ -61,7 +61,7 @@ public class BoardController {
     public String detailView(@ModelAttribute("searchVO") PostVO postVO, FileVO fileVO, Model model) {
         boardService.updateViewCnt(postVO.getIdx());
         PostVO detailView = boardService.postView(postVO);
-        FileVO fileView = boardService.postView_attach(fileVO);
+        FileVO fileView = boardService.postView_attach(postVO.getIdx());
         if(detailView == null) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
         }
@@ -76,12 +76,12 @@ public class BoardController {
     }
 
     @PostMapping("/edit")
-    public String edit(PostVO postVO, FileVO fileVO) throws ServletException, IOException {
-        log.info("filevo={}", fileVO);
-        FileVO vo = fileStore.uploadFile(fileVO.getUploadFile());
+    public String edit(@ModelAttribute("postVO") PostVO postVO, FileVO fileVO) throws ServletException, IOException {
         boardService.postWrite(postVO);
+        FileVO vo = (FileVO) fileStore.uploadFile(postVO.getFile());
+        log.info("vo.info={}", vo);
         if(vo != null) {
-            fileVO.setIdx(postVO.getIdx());
+            fileVO.setPostIdx(postVO.getIdx());
             fileVO.setBoardIdx(postVO.getBoardIdx());
             fileVO.setOriginname(vo.getOriginname());
             fileVO.setPath(vo.getPath());

@@ -24,4 +24,5 @@ public class PageVO {
     private int endData = 0; //종료 데이터
     private int realEnd = 0; //페이징 마지막 숫자
     private boolean prev, next; // 이전, 다음버튼
+
 }

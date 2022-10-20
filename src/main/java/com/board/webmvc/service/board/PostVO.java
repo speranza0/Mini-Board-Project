@@ -9,9 +9,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-@Builder
 public class PostVO extends PageVO{
 
+    //게시물 정보
     private int idx;
 
     private int boardIdx;
@@ -28,13 +28,16 @@ public class PostVO extends PageVO{
 
     private int hit;
 
+    //게시물 정보에 join 한 유저정보
     private String id;
 
     private String nickname;
 
+    //검색 쿼리를 위한 파라미터
     private String searchType;
 
     private String searchValue;
 
-    private MultipartFile uploadFile;
+    //첨부파일을 위한 멀티파트파일
+    private MultipartFile file;
 }

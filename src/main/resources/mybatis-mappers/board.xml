@@ -26,7 +26,7 @@
     </select>
 
     <select id="postView_attach" resultType="com.board.webmvc.service.board.FileVO">
-        SELECT originname, uuid, size, type, path FROM tb_post_file WHERE post_idx = #{idx}
+        SELECT originname, uuid, tbpf.size, tbpf.type, tbpf.path FROM tb_post_file tbpf WHERE post_idx = #{idx}
     </select>
 
     <select id="attachFileDown" resultType="com.board.webmvc.service.board.FileVO">
@@ -38,7 +38,7 @@
     </insert>
 
     <insert id="postWrite_attach" parameterType="com.board.webmvc.service.board.FileVO">
-        INSERT INTO tb_board_attach (post_idx, board_idx, originname, uuid, size, type, path) VALUES (#{idx}, #{boardIdx}, #{originname}, #{uuid}, #{size}, #{type}, #{path})
+        INSERT INTO tb_post_file (post_idx, board_idx, originname, uuid, size, type, path) VALUES (#{postIdx}, #{boardIdx}, #{originname}, #{uuid}, #{size}, #{type}, #{path})
     </insert>
 
     <update id="postUpdate" parameterType="com.board.webmvc.service.board.PostVO">
