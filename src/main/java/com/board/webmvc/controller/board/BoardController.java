@@ -79,7 +79,6 @@ public class BoardController {
     public String edit(@ModelAttribute("postVO") PostVO postVO, FileVO fileVO) throws ServletException, IOException {
         boardService.postWrite(postVO);
         FileVO vo = (FileVO) fileStore.uploadFile(postVO.getFile());
-        log.info("vo.info={}", vo);
         if(vo != null) {
             fileVO.setPostIdx(postVO.getIdx());
             fileVO.setBoardIdx(postVO.getBoardIdx());
@@ -89,7 +88,6 @@ public class BoardController {
             fileVO.setSize(vo.getSize());
             fileVO.setUuid(vo.getUuid());
             boardService.postWrite_attach(fileVO);
-            log.info("post_idx={}", postVO.getIdx());
         }
         return "redirect:/board/list";
     }
@@ -102,12 +100,27 @@ public class BoardController {
     @GetMapping("/update")
     public String updateView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
         PostVO detailView = boardService.postView(postVO);
+        FileVO detailFile = boardService.postView_attach(postVO.getIdx());
+        if(detailFile != null) {
+            model.addAttribute("detailFile", detailFile);
+        }
         model.addAttribute("detailView", detailView);
         return "board/update";
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("searchVO") PostVO postVO) {
+    public String update(PostVO postVO, FileVO fileVO) throws ServletException, IOException {
+        FileVO vo = (FileVO) fileStore.uploadFile(postVO.getFile());
+        if(vo != null) {
+            fileVO.setPostIdx(postVO.getIdx());
+            fileVO.setBoardIdx(postVO.getBoardIdx());
+            fileVO.setOriginname(vo.getOriginname());
+            fileVO.setPath(vo.getPath());
+            fileVO.setType(vo.getType());
+            fileVO.setSize(vo.getSize());
+            fileVO.setUuid(vo.getUuid());
+            boardService.postWrite_attach(fileVO);
+        }
         boardService.postUpdate(postVO);
         return "redirect:/board/detail/?idx=" + postVO.getIdx();
     }
@@ -121,5 +134,10 @@ public class BoardController {
     public String delete(@ModelAttribute("searchVO") PostVO postVO) {
         boardService.deletePost(postVO.getIdx());
         return "redirect:/board/list";
+    }
+
+    @GetMapping("/fileDelete")
+    public void fileDelete(FileVO fileVO) {
+        boardService.deleteFile(fileVO.getUuid());
     }
 }

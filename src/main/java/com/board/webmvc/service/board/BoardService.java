@@ -51,4 +51,8 @@ public class BoardService {
     public void deletePost(int param) {
         boardMapper.deletePost(param);
     }
+
+    public void deleteFile(String param) {
+        boardMapper.deleteFile(param);
+    }
 }

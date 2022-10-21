@@ -11,7 +11,7 @@
     </sql>
 
     <select id="postList" resultType="com.board.webmvc.service.board.PostVO">
-        SELECT tbp.idx, title, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.delete_yn = "N"
+        SELECT tbp.idx, title, tbu.nickname, tbp.regdate, hit, tbpf.uuid FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx LEFT JOIN tb_post_file tbpf ON tbp.idx = tbpf.post_idx AND tbpf.delete_yn = "N" WHERE tbp.delete_yn = "N"
         <include refid="postSearch"/>
         ORDER BY idx desc LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
     </select>
@@ -26,7 +26,7 @@
     </select>
 
     <select id="postView_attach" resultType="com.board.webmvc.service.board.FileVO">
-        SELECT originname, uuid, tbpf.size, tbpf.type, tbpf.path FROM tb_post_file tbpf WHERE post_idx = #{idx}
+        SELECT originname, uuid, tbpf.size, tbpf.type, tbpf.path FROM tb_post_file tbpf WHERE post_idx = #{idx} AND delete_yn = "N"
     </select>
 
     <select id="attachFileDown" resultType="com.board.webmvc.service.board.FileVO">
@@ -38,7 +38,7 @@
     </insert>
 
     <insert id="postWrite_attach" parameterType="com.board.webmvc.service.board.FileVO">
-        INSERT INTO tb_post_file (post_idx, board_idx, originname, uuid, size, type, path) VALUES (#{postIdx}, #{boardIdx}, #{originname}, #{uuid}, #{size}, #{type}, #{path})
+        INSERT INTO tb_post_file (post_idx, board_idx, originname, uuid, size, type, path, delete_yn) VALUES (#{postIdx}, #{boardIdx}, #{originname}, #{uuid}, #{size}, #{type}, #{path}, "N")
     </insert>
 
     <update id="postUpdate" parameterType="com.board.webmvc.service.board.PostVO">
@@ -51,5 +51,9 @@
 
     <update id="deletePost">
         UPDATE tb_post SET delete_yn = "Y" WHERE idx = #{idx}
+    </update>
+
+    <update id="deleteFile">
+        UPDATE tb_post_file SET delete_yn = "Y" WHERE uuid = #{uuid}
     </update>
 </mapper>

@@ -26,4 +26,6 @@ public interface BoardMapper {
     int updateViewCnt(int postIdx);
 
     void deletePost(int postIdx);
+
+    void deleteFile(String uuid);
 }

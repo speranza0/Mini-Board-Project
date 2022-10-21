@@ -14,7 +14,7 @@
           <div id="page" class="board-edit">
             <div class="container">
               <div class="body">
-                <form id="postForm" novalidate="novalidate" method="post" action="/board/update">
+                <form id="postForm" novalidate="novalidate" method="post" action="/board/update" enctype="multipart/form-data">
                   <input type="hidden" name="boardIdx" th:value="1" />
                   <input type="hidden" name="idx" th:value="${detailView.getIdx()}" />
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
@@ -53,24 +53,24 @@
                           <div class="file">
                             <div class="button">
                               <label class="upload">
-                                <input id="file" type="file" name="file" />
+                                <input id="file" type="file" name="file" oninput="filebox()"/>
                                 <span class="button">파일 선택</span>
                               </label>
                             </div>
                             <div id="attach" class="attach">
-                              <div class="item" data-idx="122">
+                              <div class="item" data-idx="122" style="display: none">
                                 <div class="data">
                                   <div class="filename">
-                                    <a href="#">mariadb.png</a>
+                                    <a href="#"></a>
                                     <input
                                       type="hidden"
                                       name="uploads"
                                       value="122"
                                     />
                                   </div>
-                                  <div class="size">22 KB</div>
+                                  <div class="size"></div>
                                 </div>
-                                <div class="remove">
+                                <div class="remove" onclick="fileDelete()">
                                   <svg viewBox="0 0 188 188">
                                     <g>
                                       <g>
@@ -124,5 +124,35 @@
       crossorigin="anonymous"
     ></script>
     <script src="/script/common.js"></script>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      var isFile=/*[[${detailFile != null}]]*/ || false;
+      var fileName = /*[[${detailFile != null ? detailFile.getOriginname() : ''}]]*/ || "";
+      var fileType = /*[[${detailFile != null ? detailFile.getType() : ''}]]*/ || "";
+      var fileSize = /*[[${detailFile != null ? detailFile.getSize() : ''}]]*/ || "";
+      if(isFile) {
+        $(".filename a").html(fileName + "." + fileType);
+        $(".size").html(fileSize + " Bytes");
+        $(".item").show();
+      }
+      /*]]>*/
+
+      function filebox() {
+        // var filename = $("#file")[0].files.length ? $("#file")[0].files[0].name : "";
+        var filename = $("#file").get(0).files[0].name;
+        var filesize = $("#file").get(0).files[0].size;
+        console.log($("#file").get(0).files);
+        console.log($("#file").get(0).files[0]);
+        if($("#file").get(0).files != null) {
+          $(".filename a").html(filename);
+          $(".size").html(filesize + " Bytes");
+          $(".item").show();
+        }
+      }
+      function fileDelete() {
+        $("#file").val('');
+        $(".item").css('display', 'none');
+      }
+    </script>
   </body>
 </html>

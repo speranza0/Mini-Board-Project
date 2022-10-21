@@ -33,6 +33,9 @@ public class PostVO extends PageVO{
 
     private String nickname;
 
+    //게시물 정보에 join 한 첨부파일 여부
+    private String uuid;
+
     //검색 쿼리를 위한 파라미터
     private String searchType;
 
