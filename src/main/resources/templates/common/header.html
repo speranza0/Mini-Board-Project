@@ -19,7 +19,7 @@
                 <li>
                     <div class="user" th:if="${session.loginUser != null}">
                         <a class="dropdown-toggle" href="#"
-                        ><i class="mdi mdi-account-circle"></i>관리자</a
+                        ><i class="mdi mdi-account-circle"></i><th:block th:text="${session.loginUser.getNickname()}"></th:block></a
                         >
                         <ul class="dropdown">
                             <li><a href="/user/logout">로그아웃</a></li>
