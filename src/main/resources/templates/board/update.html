@@ -135,7 +135,6 @@
         $(".size").html(fileSize + " Bytes");
         $(".item").show();
       }
-      /*]]>*/
 
       function filebox() {
         // var filename = $("#file")[0].files.length ? $("#file")[0].files[0].name : "";
@@ -149,10 +148,28 @@
           $(".item").show();
         }
       }
+
       function fileDelete() {
-        $("#file").val('');
-        $(".item").css('display', 'none');
+
+        var postIdx =  /*[[${detailView.getIdx()}]]*/ || "";
+        var fileUuid = /*[[${detailFile != null ? detailFile.getUuid() : ''}]]*/ || "";
+
+        $.ajax({
+          url : "/board/fileDelete",
+          type : "POST",
+          data : {
+            idx : postIdx,
+            uuid : fileUuid
+          },
+          async : false
+        }).done(function() {
+          $("#file").val('');
+          $(".item").css('display', 'none');
+        }).fail(function() {
+          alert("첨부파일 삭제에 실패하였습니다.")
+        });
       }
+      /*]]>*/
     </script>
   </body>
 </html>

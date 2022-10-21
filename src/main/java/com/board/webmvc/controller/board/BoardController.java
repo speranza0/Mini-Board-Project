@@ -7,16 +7,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLSyntaxErrorException;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -136,8 +134,11 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
-    @GetMapping("/fileDelete")
-    public void fileDelete(FileVO fileVO) {
-        boardService.deleteFile(fileVO.getUuid());
+    @PostMapping("/fileDelete")
+    public void fileDelete(@RequestParam Map<String, Object> map) {
+        String uuid = (String) map.get("uuid");
+        //String idx = (String) map.get("idx");
+        boardService.deleteFile(uuid);
+        // return "redirect:/board/update/?idx=" + idx;
     }
 }
