@@ -53,6 +53,24 @@ public class UserController {
         }
     }
 
+    @RequestMapping("/adminLogin")
+    public String adminLogin(HttpServletRequest request) {
+        UserVO admin = userService.login("admin", "123456");
+        userService.updateLatestLogin(admin.getIdx());
+        HttpSession session = request.getSession();
+        session.setAttribute("loginUser", admin);
+        return "redirect:/";
+    }
+
+    @RequestMapping("/testerLogin")
+    public String testerLogin(HttpServletRequest request) {
+        UserVO tester = userService.login("tester", "123456");
+        userService.updateLatestLogin(tester.getIdx());
+        HttpSession session = request.getSession();
+        session.setAttribute("loginUser", tester);
+        return "redirect:/";
+    }
+
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
