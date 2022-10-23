@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<th:block th:replace="common/head" :: head></th:block>
+<body>
+<div id="root">
+  <th:block th:replace="common/header" :: header></th:block>
+  <main id="main" class="board">
+    <div class="wrap">
+      <aside id="aside">
+        <div class="container">
+          <h2>공지사항</h2>
+        </div>
+      </aside>
+      <div id="page" class="board-list">
+        <div class="container">
+          <div class="body">
+            <h1>접근 권한이 없습니다.</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <th:block th:replace="common/footer" :: footer></th:block>
+</div>
+<script
+        src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+        crossorigin="anonymous"
+></script>
+<script src="/script/common.js"></script>
+</body>
+</html>

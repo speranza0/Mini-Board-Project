@@ -17,6 +17,7 @@
                 <form id="postForm" novalidate="novalidate" method="post" action="/board/update" enctype="multipart/form-data">
                   <input type="hidden" name="boardIdx" th:value="1" />
                   <input type="hidden" name="idx" th:value="${detailView.getIdx()}" />
+                  <input type="hidden" id="uuid" name="uuid"/>
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
                     <tbody>
@@ -130,6 +131,8 @@
       var fileName = /*[[${detailFile != null ? detailFile.getOriginname() : ''}]]*/ || "";
       var fileType = /*[[${detailFile != null ? detailFile.getType() : ''}]]*/ || "";
       var fileSize = /*[[${detailFile != null ? detailFile.getSize() : ''}]]*/ || "";
+      var postIdx =  /*[[${detailView.getIdx()}]]*/ || "";
+      var fileUuid = /*[[${detailFile != null ? detailFile.getUuid() : ''}]]*/ || "";
       if(isFile) {
         $(".filename a").html(fileName + "." + fileType);
         $(".size").html(fileSize + " Bytes");
@@ -143,6 +146,7 @@
         console.log($("#file").get(0).files);
         console.log($("#file").get(0).files[0]);
         if($("#file").get(0).files != null) {
+          $("#uuid").attr('value', '');
           $(".filename a").html(filename);
           $(".size").html(filesize + " Bytes");
           $(".item").show();
@@ -150,24 +154,9 @@
       }
 
       function fileDelete() {
-
-        var postIdx =  /*[[${detailView.getIdx()}]]*/ || "";
-        var fileUuid = /*[[${detailFile != null ? detailFile.getUuid() : ''}]]*/ || "";
-
-        $.ajax({
-          url : "/board/fileDelete",
-          type : "POST",
-          data : {
-            idx : postIdx,
-            uuid : fileUuid
-          },
-          async : false
-        }).done(function() {
-          $("#file").val('');
-          $(".item").css('display', 'none');
-        }).fail(function() {
-          alert("첨부파일 삭제에 실패하였습니다.")
-        });
+        $("#uuid").attr('value', fileUuid);
+        $("#file").val('');
+        $(".item").css('display', 'none');
       }
       /*]]>*/
     </script>
