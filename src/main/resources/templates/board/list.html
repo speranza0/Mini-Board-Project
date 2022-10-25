@@ -8,7 +8,8 @@
         <div class="wrap">
           <aside id="aside">
             <div class="container">
-              <h2>공지사항</h2>
+              <h2 th:if="${searchVO.boardIdx == 1}">공지사항</h2>
+              <h2 th:if="${searchVO.boardIdx == 10}">커뮤니티</h2>
             </div>
           </aside>
           <div id="page" class="board-list">
@@ -54,7 +55,7 @@
                       <tr th:each="postList : ${postList}">
                         <td class="num" th:text="${totCnt - ((searchVO.pageIndex -1) * 10 + postListStat.index)}"></td>
                         <td class="subject">
-                          <a th:href="@{/board/detail(idx=${postList.getIdx()}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}">
+                          <a th:href="@{/board/detail(boardIdx=${searchVO.boardIdx}, idx=${postList.getIdx()}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}">
                             <span class="text" th:text="${postList.getTitle()}">
                             </span>
                             <span class="icon" th:if="${postList.uuid} != null">
@@ -108,30 +109,30 @@
               </div>
               <div class="foot">
                 <div class="action">
-                  <a class="link" href="/board/edit">글쓰기</a>
+                  <a class="link" th:href="@{/board/edit(boardIdx=${searchVO.boardIdx})}">글쓰기</a>
                 </div>
                 <div class="more">
                   <ul class="pagination">
                     <li class="page-item">
-                      <a class="page-link" th:href="@{/board/list(pageIndex=1, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
+                      <a class="page-link" th:href="@{/board/list(boardIdx=${searchVO.boardIdx}, pageIndex=1, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
                         ><i class="mdi mdi-chevron-double-left"></i
                       ></a>
                     </li>
                     <li class="page-item" th:if="${searchVO.prev}">
-                      <a class="page-link" th:href="@{/board/list(pageIndex=${searchVO.startData - 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
+                      <a class="page-link" th:href="@{/board/list(boardIdx=${searchVO.boardIdx}, pageIndex=${searchVO.startData - 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
                         ><i class="mdi mdi-chevron-left"></i
                       ></a>
                     </li>
                     <li class="page-item" th:each="i : ${#numbers.sequence(searchVO.startData, searchVO.endData)}">
-                      <a class="page-link" th:href="@{/board/list(pageIndex=${i}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}" th:text="${i}" th:title="${i}"></a>
+                      <a class="page-link" th:href="@{/board/list(boardIdx=${searchVO.boardIdx}, pageIndex=${i}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}" th:text="${i}" th:title="${i}"></a>
                     </li>
                     <li class="page-item" th:if="${searchVO.next}">
-                      <a class="page-link paginator-next" th:href="@{/board/list(pageIndex=${searchVO.endData + 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
+                      <a class="page-link paginator-next" th:href="@{/board/list(boardIdx=${searchVO.boardIdx}, pageIndex=${searchVO.endData + 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
                         ><i class="mdi mdi-chevron-right"></i
                       ></a>
                     </li>
                     <li class="page-item">
-                      <a class="page-link" th:href="@{/board/list(pageIndex=${totalPageCnt}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
+                      <a class="page-link" th:href="@{/board/list(boardIdx=${searchVO.boardIdx}, pageIndex=${totalPageCnt}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
                         ><i class="mdi mdi-chevron-double-right"></i
                       ></a>
                     </li>

@@ -8,14 +8,15 @@
         <div class="wrap">
           <aside id="aside">
             <div class="container">
-              <h2>공지사항</h2>
+              <h2 th:if="${searchVO.boardIdx == 1}">공지사항</h2>
+              <h2 th:if="${searchVO.boardIdx == 10}">커뮤니티</h2>
             </div>
           </aside>
           <div id="page" class="board-edit">
             <div class="container">
               <div class="body">
                 <form id="postForm" novalidate="novalidate" method="post" action="/board/edit" enctype="multipart/form-data">
-                  <input type="hidden" name="boardIdx" th:value="1" />
+                  <input type="hidden" name="boardIdx" th:value="${searchVO.boardIdx}" />
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
                     <tbody>

@@ -6,20 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.SQLSyntaxErrorException;
-import java.util.Map;
+
 
 @Slf4j
 @Controller
@@ -74,10 +70,10 @@ public class BoardController {
     }
 
     @GetMapping("/edit")
-    public String editView(HttpServletRequest request) {
+    public String editView(@ModelAttribute("searchVO") PostVO postVO, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-        if(loginUser == null || (loginUser.getLevel() != 1 && loginUser.getLevel() != 10)) {
+        if(loginUser == null || (loginUser.getLevel() != 1 && loginUser.getLevel() != 10) || (postVO.getBoardIdx() == 1 && loginUser.getLevel() != 1)) {
             return "error/error";
         }
         return "board/edit";
@@ -97,7 +93,7 @@ public class BoardController {
             fileVO.setUuid(vo.getUuid());
             boardService.postWrite_attach(fileVO);
         }
-        return "redirect:/board/list";
+        return "redirect:/board/list?boardIdx=" + postVO.getBoardIdx();
     }
 
     @GetMapping("/attachFile")
@@ -135,11 +131,11 @@ public class BoardController {
             fileVO.setUuid(vo.getUuid());
             boardService.deleteFile(postVO.getUuid());
             boardService.postWrite_attach(fileVO);
+        } else {
+            if(postVO.getUuid() != null) {
+                boardService.postUpdate(postVO);
+            }
         }
-        if(vo == null) {
-            boardService.deleteFile(postVO.getUuid());
-        }
-        boardService.postUpdate(postVO);
         return "redirect:/board/detail/?idx=" + postVO.getIdx();
     }
 

@@ -12,9 +12,9 @@
         <nav class="nav">
             <ul>
                 <li th:if="${session.loginUser != null}"><a href="#" th:text="${session.loginUser.getNickname()} + '님 환영합니다.'"></a>
-                <li><a href="/board/list">공지사항</a></li>
+                <li><a href="/board/list?boardIdx=1">공지사항</a></li>
                 <li>
-                    <a href="/board/list">커뮤니티</a>
+                    <a href="/board/list?boardIdx=10">커뮤니티</a>
                 </li>
                 <li>
                     <div class="user" th:if="${session.loginUser != null}">

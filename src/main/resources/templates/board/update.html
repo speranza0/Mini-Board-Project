@@ -8,14 +8,15 @@
         <div class="wrap">
           <aside id="aside">
             <div class="container">
-              <h2>공지사항</h2>
+              <h2 th:if="${searchVO.boardIdx == 1}">공지사항</h2>
+              <h2 th:if="${searchVO.boardIdx == 10}">커뮤니티</h2>
             </div>
           </aside>
           <div id="page" class="board-edit">
             <div class="container">
               <div class="body">
                 <form id="postForm" novalidate="novalidate" method="post" action="/board/update" enctype="multipart/form-data">
-                  <input type="hidden" name="boardIdx" th:value="1" />
+                  <input type="hidden" name="boardIdx" th:value="${searchVO.boardIdx}" />
                   <input type="hidden" name="idx" th:value="${detailView.getIdx()}" />
                   <input type="hidden" id="uuid" name="uuid" th:if="${detailFile != null}" th:value="${detailFile.uuid}"/>
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
@@ -131,8 +132,6 @@
       var fileName = /*[[${detailFile != null ? detailFile.getOriginname() : ''}]]*/ || "";
       var fileType = /*[[${detailFile != null ? detailFile.getType() : ''}]]*/ || "";
       var fileSize = /*[[${detailFile != null ? detailFile.getSize() : ''}]]*/ || "";
-      var postIdx =  /*[[${detailView.getIdx()}]]*/ || "";
-      var fileUuid = /*[[${detailFile != null ? detailFile.getUuid() : ''}]]*/ || "";
       if(isFile) {
         $(".filename a").html(fileName + "." + fileType);
         $(".size").html(fileSize + " Bytes");
