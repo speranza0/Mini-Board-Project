@@ -17,7 +17,7 @@
                 <form id="postForm" novalidate="novalidate" method="post" action="/board/update" enctype="multipart/form-data">
                   <input type="hidden" name="boardIdx" th:value="1" />
                   <input type="hidden" name="idx" th:value="${detailView.getIdx()}" />
-                  <input type="hidden" id="uuid" name="uuid"/>
+                  <input type="hidden" id="uuid" name="uuid" th:if="${detailFile != null}" th:value="${detailFile.uuid}"/>
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
                     <tbody>
@@ -146,7 +146,6 @@
         console.log($("#file").get(0).files);
         console.log($("#file").get(0).files[0]);
         if($("#file").get(0).files != null) {
-          $("#uuid").attr('value', '');
           $(".filename a").html(filename);
           $(".size").html(filesize + " Bytes");
           $(".item").show();
@@ -154,7 +153,6 @@
       }
 
       function fileDelete() {
-        $("#uuid").attr('value', fileUuid);
         $("#file").val('');
         $(".item").css('display', 'none');
       }

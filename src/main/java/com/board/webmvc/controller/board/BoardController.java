@@ -107,12 +107,11 @@ public class BoardController {
 
     @GetMapping("/update")
     public String updateView(@ModelAttribute("searchVO") PostVO postVO, Model model, HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-//        log.info("useridx = {}", postVO.getUserIdx());
-//        if(loginUser == null || loginUser.getLevel() != 1 || loginUser.getIdx() != postVO.getUserIdx()) {
-//            return "error/error";
-//        }
+        HttpSession session = request.getSession();
+        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+        if(loginUser == null || (loginUser.getLevel() != 1 && loginUser.getIdx() != postVO.getUserIdx())) {
+            return "error/error";
+        }
 
         PostVO detailView = boardService.postView(postVO);
         FileVO detailFile = boardService.postView_attach(postVO.getIdx());
@@ -134,10 +133,10 @@ public class BoardController {
             fileVO.setType(vo.getType());
             fileVO.setSize(vo.getSize());
             fileVO.setUuid(vo.getUuid());
+            boardService.deleteFile(postVO.getUuid());
             boardService.postWrite_attach(fileVO);
         }
         if(vo == null) {
-            log.info("uuid={}", postVO.getUuid());
             boardService.deleteFile(postVO.getUuid());
         }
         boardService.postUpdate(postVO);
@@ -153,11 +152,5 @@ public class BoardController {
     public String delete(@ModelAttribute("searchVO") PostVO postVO) {
         boardService.deletePost(postVO.getIdx());
         return "redirect:/board/list";
-    }
-
-    @PostMapping("/fileDelete")
-    public String fileDelete(FileVO fileVO) {
-        boardService.deleteFile(fileVO.getUuid());
-        return "redirect:/board/update?idx=" + fileVO.getPostIdx();
     }
 }

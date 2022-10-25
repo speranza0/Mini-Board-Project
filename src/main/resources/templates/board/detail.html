@@ -84,7 +84,7 @@
 
               <div class="action">
                 <a class="button" th:href="@{/board/delete(idx=${detailView.getIdx()})}">삭제</a>
-                <a class="button" th:href="@{/board/update(idx=${detailView.getIdx()})}">수정</a>
+                <a class="button" th:href="@{/board/update(idx=${detailView.getIdx()}, userIdx=${detailView.getUserIdx()})}">수정</a>
                 <a
                   class="button black"
                   th:href="@{/board/list(pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
