@@ -7,6 +7,8 @@ import java.util.ArrayList;
 @Mapper
 public interface BoardMapper {
 
+    BoardNumVO boardNum(int boardIdx);
+
     ArrayList<PostVO> postList(PostVO postVO);
 
     int getListCnt(PostVO postVO);

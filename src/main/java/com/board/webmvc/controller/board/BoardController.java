@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 
 @Slf4j
@@ -30,6 +31,12 @@ public class BoardController {
 
     @GetMapping("/list")
     public String listView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
+        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
+
+        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
+            return "error/error";
+        }
+
         //페이징[s]
         Pagination pagination = new Pagination();
         pagination.setCurrentPageNo(postVO.getPageIndex());
@@ -57,10 +64,17 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public String detailView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
+    public String detailView(@ModelAttribute("searchVO") PostVO postVO, Model model, HttpServletRequest request) {
         boardService.updateViewCnt(postVO.getIdx());
         PostVO detailView = boardService.postView(postVO);
         FileVO fileView = boardService.postView_attach(postVO.getIdx());
+
+        HttpSession session = request.getSession();
+        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+
+        log.info("loginUser = {}", loginUser.getIdx());
+        log.info("Get postUserIdx = {}", detailView.getUserIdx());
+
         if(detailView == null) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
         }
@@ -73,9 +87,6 @@ public class BoardController {
     public String editView(@ModelAttribute("searchVO") PostVO postVO, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-        if(loginUser == null || (loginUser.getLevel() != 1 && loginUser.getLevel() != 10) || (postVO.getBoardIdx() == 1 && loginUser.getLevel() != 1)) {
-            return "error/error";
-        }
         return "board/edit";
     }
 
@@ -105,11 +116,33 @@ public class BoardController {
     public String updateView(@ModelAttribute("searchVO") PostVO postVO, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-        if(loginUser == null || (loginUser.getLevel() != 1 && loginUser.getIdx() != postVO.getUserIdx())) {
+        log.info("loginUser = {}", loginUser.getIdx());
+        log.info("Get postUserIdx = {}", postVO.getUserIdx());
+
+        // 게시판이 없는 경우
+        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
+        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
             return "error/error";
         }
 
+        //게시글이 없는 경우
         PostVO detailView = boardService.postView(postVO);
+        if(detailView == null) {
+            return "error/error";
+        }
+
+        log.info("detailView useridx = {}", detailView.getUserIdx());
+
+        // 일반 사용자가 관리자 게시글을 수정하려고 할때
+        if("admin".equals(boardNum.getType()) && loginUser.getLevel() != 1) {
+            return "error/error";
+        }
+
+        // 사용자가 다른 사용자 게시글을 수정하려고 할때
+        if(loginUser.getIdx() != postVO.getUserIdx()) {
+            return "error/error";
+        }
+
         FileVO detailFile = boardService.postView_attach(postVO.getIdx());
         if(detailFile != null) {
             model.addAttribute("detailFile", detailFile);

@@ -23,6 +23,7 @@
         </section>
         <section class="form">
           <form id="loginForm" method="post" action="/user/login">
+            <input type="hidden" name="redirectURL" th:value="${redirectURL} "/>
             <div th:if="${exception != null}"><p th:text="${exception}"></p></div>
             <div class="form-field">
               <input

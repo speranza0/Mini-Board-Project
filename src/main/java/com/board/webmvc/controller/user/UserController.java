@@ -34,19 +34,22 @@ public class UserController {
 
 
     @GetMapping("/login")
-    public String loginView() {
+    public String loginView(Model model, @RequestParam(value = "redirectURL", required = false) String redirectURL) {
+        model.addAttribute("redirectURL", redirectURL);
+        log.info("Get redirectURL = {}", redirectURL);
         return "user/login";
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute UserVO user, Model model, HttpServletRequest request) {
+    public String login(@Validated @ModelAttribute UserVO user, @RequestParam(defaultValue = "/") String redirectURL, Model model, HttpServletRequest request) {
 
         try {
             UserVO loginUser = userService.login(user.getId(), user.getPassword());
             userService.updateLatestLogin(loginUser.getIdx());
             HttpSession session = request.getSession();
             session.setAttribute("loginUser", loginUser);
-            return "redirect:/";
+            log.info("redirectURL = {}", redirectURL);
+            return "redirect:" + redirectURL;
         } catch (RuntimeException e) {
             model.addAttribute("exception", e.getMessage());
             return "user/login";

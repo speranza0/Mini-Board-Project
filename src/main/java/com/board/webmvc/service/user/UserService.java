@@ -18,11 +18,11 @@ public class UserService {
     public UserVO login(String id, String password) {
         UserVO user = userMapper.login(id);
         if(user == null) {
-            throw new RuntimeException("아이디 없음");
+            throw new RuntimeException("아이디가 존재하지 않습니다.");
         }
 
         if(!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("비밀번호 틀림");
+            throw new RuntimeException("비밀번호가 맞지 않습니다.");
         }
         return user;
     }

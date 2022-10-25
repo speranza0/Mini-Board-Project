@@ -12,6 +12,10 @@ import java.util.ArrayList;
 public class BoardService {
     private final BoardMapper boardMapper;
 
+    public BoardNumVO boardNumVO(int boardIdx) {
+        return boardMapper.boardNum(boardIdx);
+    }
+
     public ArrayList<PostVO> postList(PostVO param) {
         return boardMapper.postList(param);
     }
