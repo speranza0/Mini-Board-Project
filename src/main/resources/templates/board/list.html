@@ -21,6 +21,7 @@
                   </div>
                   <div class="search">
                     <form>
+                      <input type="hidden" id="boardIdx" name="boardIdx" th:value="${searchVO.getBoardIdx()}">
                       <input type="hidden" id="pageIndex" name="pageIndex" value="1">
                       <select name="searchType" th:value="${searchVO.getSearchType()}">
                         <option value="0" th:selected="${searchVO.getSearchType}=='0'">선택</option>

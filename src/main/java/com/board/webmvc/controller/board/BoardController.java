@@ -69,12 +69,6 @@ public class BoardController {
         PostVO detailView = boardService.postView(postVO);
         FileVO fileView = boardService.postView_attach(postVO.getIdx());
 
-        HttpSession session = request.getSession();
-        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-
-        log.info("loginUser = {}", loginUser.getIdx());
-        log.info("Get postUserIdx = {}", detailView.getUserIdx());
-
         if(detailView == null) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
         }
@@ -116,8 +110,6 @@ public class BoardController {
     public String updateView(@ModelAttribute("searchVO") PostVO postVO, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
-        log.info("loginUser = {}", loginUser.getIdx());
-        log.info("Get postUserIdx = {}", postVO.getUserIdx());
 
         // 게시판이 없는 경우
         BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
@@ -131,15 +123,13 @@ public class BoardController {
             return "error/error";
         }
 
-        log.info("detailView useridx = {}", detailView.getUserIdx());
-
         // 일반 사용자가 관리자 게시글을 수정하려고 할때
         if("admin".equals(boardNum.getType()) && loginUser.getLevel() != 1) {
             return "error/error";
         }
 
         // 사용자가 다른 사용자 게시글을 수정하려고 할때
-        if(loginUser.getIdx() != postVO.getUserIdx()) {
+        if(loginUser.getLevel() != 1 && loginUser.getIdx() != detailView.getUserIdx()) {
             return "error/error";
         }
 
@@ -165,11 +155,12 @@ public class BoardController {
             boardService.deleteFile(postVO.getUuid());
             boardService.postWrite_attach(fileVO);
         } else {
-            if(postVO.getUuid() != null) {
-                boardService.postUpdate(postVO);
+            if(postVO.getUuid() != null && "Y".equals(postVO.getFileDeleteYn())) {
+                boardService.deleteFile(postVO.getUuid());
             }
         }
-        return "redirect:/board/detail/?idx=" + postVO.getIdx();
+        boardService.postUpdate(postVO);
+        return "redirect:/board/detail/?boardIdx=" + postVO.getBoardIdx() + "&idx=" + postVO.getIdx();
     }
 
     @GetMapping("/cancel")
@@ -178,8 +169,33 @@ public class BoardController {
     }
 
     @GetMapping("/delete")
-    public String delete(@ModelAttribute("searchVO") PostVO postVO) {
+    public String delete(@ModelAttribute("searchVO") PostVO postVO, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+
+        // 게시판이 없는 경우
+        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
+        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
+            return "error/error";
+        }
+
+        //게시글이 없는 경우
+        PostVO detailView = boardService.postView(postVO);
+        if(detailView == null) {
+            return "error/error";
+        }
+
+        // 일반 사용자가 관리자 게시글을 삭제하려고 할때
+        if("admin".equals(boardNum.getType()) && loginUser.getLevel() != 1) {
+            return "error/error";
+        }
+
+        // 사용자가 다른 사용자 게시글을 삭제하려고 할때
+        if(loginUser.getLevel() != 1 && loginUser.getIdx() != detailView.getUserIdx()) {
+            return "error/error";
+        }
+
         boardService.deletePost(postVO.getIdx());
-        return "redirect:/board/list";
+        return "redirect:/board/list/?boardIdx=" + postVO.getBoardIdx();
     }
 }

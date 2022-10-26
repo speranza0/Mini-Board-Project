@@ -12,7 +12,7 @@ import java.net.URLEncoder;
 
 @Slf4j
 public class LoginCheckFilter implements Filter {
-    private static final String[] whitelist = {"/", "/user/*", "/board/list", "/board/detail", "/assets/*", "/script/*", "/style/*"};
+    private static final String[] whitelist = {"/", "/user/*", "/board/list", "/board/detail", "/board/attachFile", "/assets/*", "/script/*", "/style/*"};
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

@@ -36,6 +36,9 @@ public class PostVO extends PageVO{
     //게시물 정보에 join 한 첨부파일 여부
     private String uuid;
 
+    //게시물 첨부파일 삭제 여부
+    private String fileDeleteYn;
+
     //검색 쿼리를 위한 파라미터
     private String searchType;
 

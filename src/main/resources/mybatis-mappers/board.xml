@@ -26,7 +26,7 @@
     </select>
 
     <select id="postView" resultType="com.board.webmvc.service.board.PostVO">
-        SELECT tbp.idx, tbp.user_idx, title, content, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.idx = #{idx}
+        SELECT tbp.idx, tbp.board_idx, tbp.user_idx, title, content, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.idx = #{idx}
     </select>
 
     <select id="postView_attach" resultType="com.board.webmvc.service.board.FileVO">
