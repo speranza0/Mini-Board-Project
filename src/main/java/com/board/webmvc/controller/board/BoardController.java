@@ -81,6 +81,18 @@ public class BoardController {
     public String editView(@ModelAttribute("searchVO") PostVO postVO, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+
+        // 게시판이 없는 경우
+        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
+        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
+            return "error/error";
+        }
+
+        // 일반 사용자가 관리자 게시판에 등록하려고 할때
+        if("admin".equals(boardNum.getType()) && loginUser.getLevel() != 1) {
+            return "error/error";
+        }
+
         return "board/edit";
     }
 
