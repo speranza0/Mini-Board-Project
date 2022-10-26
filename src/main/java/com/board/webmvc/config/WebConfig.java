@@ -5,7 +5,6 @@ import com.board.webmvc.filter.LoginCheckFilter;
 import com.board.webmvc.interceptor.LogInterceptor;
 import com.board.webmvc.interceptor.LoginCheckInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -29,12 +28,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LogInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/assets/*", "/script/*", "/style/*", "/*.ico", "/error");
+                .excludePathPatterns("/assets/*", "/script/*", "/style/*", "/error/*");
 
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/user/*", "/board/list", "/board/detail", "/board/attachFile", "/assets/*", "/script/*", "/style/*", "/*.ico", "/error");
+                .excludePathPatterns("/", "/user/*", "/board/list", "/board/detail", "/board/attachFile", "/assets/*", "/script/*", "/style/*", "/error/*");
     }
 
     //@Bean
