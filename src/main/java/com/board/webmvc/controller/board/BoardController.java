@@ -15,19 +15,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 
 
 @Slf4j
 @Controller
 @RequestMapping("/board")
 public class BoardController {
+    private final BoardService boardService;
+    private final FileStore fileStore;
 
     @Autowired
-    private BoardService boardService;
-
-    @Autowired
-    private FileStore fileStore;
+    public BoardController(BoardService boardService, FileStore fileStore) {
+        this.boardService = boardService;
+        this.fileStore = fileStore;
+    }
 
     @GetMapping("/list")
     public String listView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
@@ -64,7 +65,7 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public String detailView(@ModelAttribute("searchVO") PostVO postVO, Model model, HttpServletRequest request) {
+    public String detailView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
         boardService.updateViewCnt(postVO.getIdx());
         PostVO detailView = boardService.postView(postVO);
         FileVO fileView = boardService.postView_attach(postVO.getIdx());

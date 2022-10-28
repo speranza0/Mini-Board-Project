@@ -1,7 +1,6 @@
 package com.board.webmvc.service.board;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @NoArgsConstructor
 @AllArgsConstructor

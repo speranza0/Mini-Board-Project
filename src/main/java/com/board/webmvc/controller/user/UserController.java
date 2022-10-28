@@ -1,37 +1,28 @@
 package com.board.webmvc.controller.user;
 
-import com.board.webmvc.service.user.UserMapper;
 import com.board.webmvc.service.user.UserService;
 import com.board.webmvc.service.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserService userService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/login")
     public String loginView(Model model, @RequestParam(value = "redirectURL", required = false) String redirectURL) {
