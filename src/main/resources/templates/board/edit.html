@@ -105,7 +105,7 @@
                   </table>
                   <div class="form-action">
                     <div class="action">
-                      <a class="button" href="/board/cancel">취소</a>
+                      <a class="button" th:href="@{/board/list(boardIdx=${searchVO.boardIdx}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}">취소</a>
                       <button class="button black" type="submit">등록</button>
                     </div>
                   </div>

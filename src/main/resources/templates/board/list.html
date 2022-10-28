@@ -110,7 +110,7 @@
               </div>
               <div class="foot">
                 <div class="action">
-                  <a class="link" th:href="@{/board/edit(boardIdx=${searchVO.boardIdx})}">글쓰기</a>
+                  <a class="link" th:href="@{/board/edit(boardIdx=${searchVO.boardIdx}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}">글쓰기</a>
                 </div>
                 <div class="more">
                   <ul class="pagination">

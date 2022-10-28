@@ -176,11 +176,6 @@ public class BoardController {
         return "redirect:/board/detail/?boardIdx=" + postVO.getBoardIdx() + "&idx=" + postVO.getIdx();
     }
 
-    @GetMapping("/cancel")
-    public String cancel() {
-        return "redirect:/board/list";
-    }
-
     @GetMapping("/delete")
     public String delete(@ModelAttribute("searchVO") PostVO postVO, HttpServletRequest request) {
         HttpSession session = request.getSession();
