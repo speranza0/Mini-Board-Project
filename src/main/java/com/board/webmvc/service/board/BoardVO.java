@@ -9,10 +9,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BoardNumVO {
+public class BoardVO {
     private int idx;
 
     private String name;
+
+    private String title;
 
     private String type;
 }

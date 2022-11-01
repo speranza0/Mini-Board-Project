@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/user/*", "/board/list", "/board/detail", "/board/attachFile", "/assets/*", "/script/*", "/style/*", "/error/*");
+                .excludePathPatterns("/", "/user/*", "/board/**/list", "/board/**/detail/**", "/board/attachFile", "/assets/*", "/script/*", "/style/*", "/error/*");
     }
 
     //@Bean

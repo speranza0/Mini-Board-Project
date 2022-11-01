@@ -8,20 +8,19 @@
         <div class="wrap">
           <aside id="aside">
             <div class="container">
-              <h2 th:if="${searchVO.boardIdx == 1}">공지사항</h2>
-              <h2 th:if="${searchVO.boardIdx == 10}">커뮤니티</h2>
+              <h2 th:text="${boardVO.title}">게시판 이름</h2>
             </div>
           </aside>
           <div id="page" class="board-detail">
             <div class="container">
               <div class="head">
-                <div class="subject" th:text="${detailView.getTitle()}">
+                <div class="subject" th:text="${detailView.title}">
                 </div>
                 <div class="meta">
                   <ul>
-                    <li th:text="${detailView.getNickname()}"></li>
-                    <li th:text="${#dates.format(detailView.getRegdate(), 'yyyy-MM-dd')}"></li>
-                    <li th:text="${detailView.getHit()}"></li>
+                    <li th:text="${detailView.nickname}"></li>
+                    <li th:text="${#dates.format(detailView.regdate, 'yyyy-MM-dd')}"></li>
+                    <li th:text="${detailView.hit}"></li>
                   </ul>
                 </div>
               </div>
@@ -80,16 +79,17 @@
                 </ul>
               </div>
               <div class="contents">
-                <div class="smart-editor-view" th:text="${detailView.getContent()}">내용</div>
+                <div class="smart-editor-view" th:text="${detailView.content}">내용</div>
               </div>
 
               <div class="action">
-                <a class="button" th:href="@{/board/delete(boardIdx=${detailView.getBoardIdx()}, idx=${detailView.getIdx()})}">삭제</a>
-                <a class="button" th:href="@{/board/update(boardIdx=${detailView.getBoardIdx()}, idx=${detailView.getIdx()})}">수정</a>
+                <a class="button" th:href="@{/board/{boardName}/delete/{postIdx}(boardName=${boardVO.name}, postIdx=${detailView.idx})}">삭제</a>
+                <a class="button" th:href="@{/board/{boardName}/update/{postIdx}(boardName=${boardVO.name}, postIdx=${detailView.idx})}">수정</a>
                 <a
                   class="button black"
-                  th:href="@{/board/list(boardIdx=${detailView.getBoardIdx()}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
-                  >목록</a
+                  href="javascript:history.back();">
+                  <!--th:href="@{/board/{boardName}/list(boardName=${boardVO.name}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
+                  -->목록</a
                 >
               </div>
               <div class="surround">

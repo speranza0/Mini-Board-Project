@@ -8,7 +8,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-public class PostVO extends PageVO{
+public class PostVO {
 
     //게시물 정보
     private int idx;
@@ -37,11 +37,6 @@ public class PostVO extends PageVO{
 
     //게시물 첨부파일 삭제 여부
     private String fileDeleteYn;
-
-    //검색 쿼리를 위한 파라미터
-    private String searchType;
-
-    private String searchValue;
 
     //첨부파일을 위한 멀티파트파일
     private MultipartFile file;

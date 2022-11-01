@@ -2,22 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.board.webmvc.service.board.BoardMapper">
     <sql id="postSearch">
-        <if test="searchValue != null and searchValue != ''">
+        <if test="searchBoardVO.searchValue != null and searchBoardVO.searchValue != ''">
             AND
             (
-                ${searchType} like concat('%', #{searchValue}, '%')
+                ${searchBoardVO.searchType} like concat('%', #{searchBoardVO.searchValue}, '%')
             )
         </if>
     </sql>
 
-    <select id="boardNum" resultType="com.board.webmvc.service.board.BoardNumVO">
-        SELECT * FROM tb_board WHERE idx = #{boardIdx}
+    <select id="getBoardByName" resultType="com.board.webmvc.service.board.BoardVO">
+        SELECT * FROM tb_board WHERE name = #{boardName}
     </select>
 
     <select id="postList" resultType="com.board.webmvc.service.board.PostVO">
         SELECT tbp.idx, title, tbpf.uuid, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx LEFT JOIN tb_post_file tbpf ON tbp.idx = tbpf.post_idx AND tbpf.delete_yn = "N" WHERE tbp.delete_yn = "N" AND tbp.board_idx = #{boardIdx}
         <include refid="postSearch"/>
-        ORDER BY idx desc LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+        ORDER BY idx desc LIMIT #{searchBoardVO.recordCountPerPage} OFFSET #{searchBoardVO.firstIndex}
     </select>
 
     <select id="getListCnt" resultType="java.lang.Integer">
@@ -37,16 +37,16 @@
         SELECT originname, uuid, size, type, path FROM tb_post_file WHERE uuid = #{uuid}
     </select>
 
-    <insert id="postWrite" parameterType="com.board.webmvc.service.board.PostVO" useGeneratedKeys="true" keyProperty="idx" keyColumn="idx">
-        INSERT INTO tb_post(board_idx, user_idx, title, content, regdate, hit, delete_yn) VALUES (#{boardIdx}, #{userIdx}, #{title}, #{content}, now(), 0, "N")
+    <insert id="postWrite" parameterType="com.board.webmvc.controller.board.BoardParam$Create" useGeneratedKeys="true" keyProperty="idx" keyColumn="idx">
+        INSERT INTO tb_post(board_idx, user_idx, title, content, regdate, hit, delete_yn) VALUES (#{createBoardVO.boardIdx}, #{createBoardVO.userIdx}, #{createBoardVO.title}, #{createBoardVO.content}, now(), 0, "N")
     </insert>
 
     <insert id="postWrite_attach" parameterType="com.board.webmvc.service.board.FileVO">
         INSERT INTO tb_post_file (post_idx, board_idx, originname, uuid, size, type, path, delete_yn) VALUES (#{postIdx}, #{boardIdx}, #{originname}, #{uuid}, #{size}, #{type}, #{path}, "N")
     </insert>
 
-    <update id="postUpdate" parameterType="com.board.webmvc.service.board.PostVO">
-        UPDATE tb_post SET title = #{title}, content = #{content}, updatetime = now() WHERE idx = #{idx}
+    <update id="postUpdate" parameterType="com.board.webmvc.controller.board.BoardParam$Update">
+        UPDATE tb_post SET title = #{updateBoardVO.title}, content = #{updateBoardVO.content}, updatetime = now() WHERE idx = #{updateBoardVO.idx}
     </update>
 
     <update id="updateViewCnt">

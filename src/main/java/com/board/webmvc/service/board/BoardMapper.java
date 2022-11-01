@@ -1,29 +1,31 @@
 package com.board.webmvc.service.board;
 
+import com.board.webmvc.controller.board.BoardParam;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 
 @Mapper
 public interface BoardMapper {
 
-    BoardNumVO boardNum(int boardIdx);
+    BoardVO getBoardByName(String boardName);
 
-    ArrayList<PostVO> postList(PostVO postVO);
+    ArrayList<PostVO> postList(@Param("boardIdx") int boardIdx, @Param("searchBoardVO") BoardParam.Search searchBoardVO);
 
-    int getListCnt(PostVO postVO);
+    int getListCnt(@Param("boardIdx") int boardIdx, @Param("searchBoardVO") BoardParam.Search searchBoardVO);
 
-    PostVO postView(PostVO postVO);
+    PostVO postView(int postVO);
 
     FileVO postView_attach(int postIdx);
 
     FileVO attachFileDown(FileVO fileVO);
 
-    void postWrite(PostVO postVO);
+    void postWrite(@Param("createBoardVO") BoardParam.Create createBoardVO);
 
     void postWrite_attach(FileVO fileVO);
 
-    void postUpdate(PostVO postVO);
+    void postUpdate(@Param("updateBoardVO") BoardParam.Update updateBoardVO);
 
     int updateViewCnt(int postIdx);
 

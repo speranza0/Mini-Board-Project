@@ -8,16 +8,15 @@
         <div class="wrap">
           <aside id="aside">
             <div class="container">
-              <h2 th:if="${searchVO.boardIdx == 1}">공지사항</h2>
-              <h2 th:if="${searchVO.boardIdx == 10}">커뮤니티</h2>
+              <h2 th:text="${boardVO.title}">게시판 이름</h2>
             </div>
           </aside>
           <div id="page" class="board-edit">
             <div class="container">
               <div class="body">
-                <form id="postForm" novalidate="novalidate" method="post" action="/board/update" enctype="multipart/form-data">
-                  <input type="hidden" name="boardIdx" th:value="${searchVO.boardIdx}" />
-                  <input type="hidden" name="idx" th:value="${detailView.getIdx()}" />
+                <form id="postForm" novalidate="novalidate" method="post" th:action="@{/board/{boardName}/update/{postIdx}(boardName=${boardVO.name}, postIdx=${detailView.idx})}" enctype="multipart/form-data">
+                  <input type="hidden" name="boardIdx" th:value="${detailView.boardIdx}" />
+                  <input type="hidden" name="idx" th:value="${detailView.idx}" />
                   <input type="hidden" id="uuid" name="uuid" th:if="${detailFile != null}" th:value="${detailFile.uuid}"/>
                   <input type="hidden" id="fileDeleteYn" name="fileDeleteYn" th:if="${detailFile != null}" th:value="N">
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
@@ -30,7 +29,7 @@
                             class="input"
                             type="text"
                             name="title"
-                            th:value="${detailView.getTitle()}"
+                            th:value="${detailView.title}"
                             data-name="제목"
                             maxlength="255"
                             required=""
@@ -44,7 +43,7 @@
                             class="textarea"
                             id="editor"
                             name="content"
-                            th:text="${detailView.getContent()}"
+                            th:text="${detailView.content}"
                             data-name="내용"
                           ></textarea>
                         </td>
@@ -109,7 +108,7 @@
                   </table>
                   <div class="form-action">
                     <div class="action">
-                      <a class="button" th:href="@{/board/detail(boardIdx=${searchVO.boardIdx}, idx=${detailView.getIdx()}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}">취소</a>
+                      <a class="button" href="javascript:history.back();">취소</a>
                       <button class="button black" type="submit">수정</button>
                     </div>
                   </div>

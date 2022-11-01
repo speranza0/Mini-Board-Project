@@ -8,15 +8,14 @@
         <div class="wrap">
           <aside id="aside">
             <div class="container">
-              <h2 th:if="${searchVO.boardIdx == 1}">공지사항</h2>
-              <h2 th:if="${searchVO.boardIdx == 10}">커뮤니티</h2>
+              <h2 th:text="${boardVO.title}">게시판 이름</h2>
             </div>
           </aside>
           <div id="page" class="board-edit">
             <div class="container">
               <div class="body">
-                <form id="postForm" novalidate="novalidate" method="post" action="/board/edit" enctype="multipart/form-data">
-                  <input type="hidden" name="boardIdx" th:value="${searchVO.boardIdx}" />
+                <form id="postForm" novalidate="novalidate" method="post" th:action="@{/board/{boardName}/edit(boardName=${boardVO.name})}" enctype="multipart/form-data">
+                  <input type="hidden" name="boardIdx" th:value="${boardVO.idx}" />
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
                     <tbody>
@@ -27,7 +26,6 @@
                             class="input"
                             type="text"
                             name="title"
-                            value=""
                             data-name="제목"
                             maxlength="255"
                             required=""
@@ -105,7 +103,7 @@
                   </table>
                   <div class="form-action">
                     <div class="action">
-                      <a class="button" th:href="@{/board/list(boardIdx=${searchVO.boardIdx}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}">취소</a>
+                      <a class="button" href="javascript:history.back();">취소</a>
                       <button class="button black" type="submit">등록</button>
                     </div>
                   </div>

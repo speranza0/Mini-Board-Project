@@ -29,7 +29,8 @@ public class Pagination {
         if(realEnd < lastPageNoOnPageList) {
             lastPageNoOnPageList = realEnd;
         }
-        return lastPageNoOnPageList;
+
+        return lastPageNoOnPageList == 0 ? 1 : lastPageNoOnPageList;
     }
 
     public int getFirstRecordIndex() {

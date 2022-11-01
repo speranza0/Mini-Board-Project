@@ -22,7 +22,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         log.info("인증 체크 인터셉터 실행 {}", requestURI);
         HttpSession session = request.getSession();
 
-        if(session == null || session.getAttribute("loginUser") == null) {
+        if(!requestURI.contains("/user/login") && (session == null || session.getAttribute("loginUser") == null)) {
             log.info("미인증 사용자 요청");
             //로그인으로 redirect
             response.sendRedirect("/user/login?redirectURL=" + requestURI + "?" + query);

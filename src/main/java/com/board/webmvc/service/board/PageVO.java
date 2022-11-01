@@ -17,8 +17,24 @@ public class PageVO {
     private int recordCountPerPage = 10; // 한페이지당 게시되는 게시물 수
     private int totCnt = 0; //총 갯수
     private int startData = 0; //시작 데이터
-    private int endData = 0; //종료 데이터
+    private int endData = 1; //종료 데이터
     private int realEnd = 0; //페이징 마지막 숫자
     private boolean prev, next; // 이전, 다음버튼
 
+    @Override
+    public String toString() {
+        return "PageVO{" +
+                "pageIndex=" + pageIndex +
+                ", pageUnit=" + pageUnit +
+                ", pageSize=" + pageSize +
+                ", firstIndex=" + firstIndex +
+                ", recordCountPerPage=" + recordCountPerPage +
+                ", totCnt=" + totCnt +
+                ", startData=" + startData +
+                ", endData=" + endData +
+                ", realEnd=" + realEnd +
+                ", prev=" + prev +
+                ", next=" + next +
+                '}';
+    }
 }

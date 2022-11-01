@@ -2,108 +2,117 @@ package com.board.webmvc.controller.board;
 
 import com.board.webmvc.service.board.*;
 import com.board.webmvc.service.user.UserVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
     private final FileStore fileStore;
 
-    @Autowired
-    public BoardController(BoardService boardService, FileStore fileStore) {
-        this.boardService = boardService;
-        this.fileStore = fileStore;
-    }
+    @GetMapping("/{boardName}/list")
+    public String listView(BoardParam.Search searchBoardVO, @PathVariable String boardName, Model model) {
 
-    @GetMapping("/list")
-    public String listView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
-        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
+        BoardVO boardVO = boardService.getBoardByName(boardName);
 
-        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
+        if(ObjectUtils.isEmpty(boardVO)) {
             return "error/error";
         }
 
         //페이징[s]
         Pagination pagination = new Pagination();
-        pagination.setCurrentPageNo(postVO.getPageIndex());
-        pagination.setRecordCountPerPage(postVO.getPageUnit());
-        pagination.setPageSize(postVO.getPageSize());
+        pagination.setCurrentPageNo(searchBoardVO.getPageIndex());
+        pagination.setRecordCountPerPage(searchBoardVO.getPageUnit());
+        pagination.setPageSize(searchBoardVO.getPageSize());
 
-        postVO.setFirstIndex(pagination.getFirstRecordIndex());
-        postVO.setRecordCountPerPage(pagination.getRecordCountPerPage());
+        searchBoardVO.setFirstIndex(pagination.getFirstRecordIndex());
+        searchBoardVO.setRecordCountPerPage(pagination.getRecordCountPerPage());
 
-        int totCnt = boardService.getListCnt(postVO);
+        int totCnt = boardService.getListCnt(boardVO.getIdx(), searchBoardVO);
 
         pagination.setTotalRecordCount(totCnt);
 
-        postVO.setEndData(pagination.getLastPageNoOnPageList());
-        postVO.setStartData(pagination.getFirstPageNoOnPageList());
-        postVO.setPrev(pagination.getXprev());
-        postVO.setNext(pagination.getXnext());
+        searchBoardVO.setEndData(pagination.getLastPageNoOnPageList());
+        searchBoardVO.setStartData(pagination.getFirstPageNoOnPageList());
+        searchBoardVO.setPrev(pagination.getXprev());
+        searchBoardVO.setNext(pagination.getXnext());
 
-        model.addAttribute("postList", boardService.postList(postVO));
+        model.addAttribute("boardVO", boardVO);
+        model.addAttribute("searchVO", searchBoardVO);
+        log.info("searchBoardVO {}",searchBoardVO);
+        model.addAttribute("postList", boardService.postList(boardVO.getIdx(), searchBoardVO));
         model.addAttribute("totCnt",totCnt);
-        model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)postVO.getPageUnit()));
+        model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)searchBoardVO.getPageUnit()));
         model.addAttribute("pagination",pagination);
         //페이징[e]
         return "board/list";
     }
 
-    @GetMapping("/detail")
-    public String detailView(@ModelAttribute("searchVO") PostVO postVO, Model model) {
-        boardService.updateViewCnt(postVO.getIdx());
-        PostVO detailView = boardService.postView(postVO);
-        FileVO fileView = boardService.postView_attach(postVO.getIdx());
+    @GetMapping("/{boardName}/detail/{postIdx}")
+    public String detailView(BoardParam.Search searchBoardVO, @PathVariable String boardName, @PathVariable int postIdx, Model model) {
+        BoardVO boardVO = boardService.getBoardByName(boardName);
+
+        if(ObjectUtils.isEmpty(boardVO)) {
+            return "error/error";
+        }
+        boardService.updateViewCnt(postIdx);
+        PostVO detailView = boardService.postView(postIdx);
+        FileVO fileView = boardService.postView_attach(postIdx);
 
         if(detailView == null) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
         }
+        model.addAttribute("boardVO", boardVO);
+        model.addAttribute("searchVO", searchBoardVO);
         model.addAttribute("detailView", detailView);
         model.addAttribute("fileView", fileView);
         return "board/detail";
     }
 
-    @GetMapping("/edit")
-    public String editView(@ModelAttribute("searchVO") PostVO postVO, HttpServletRequest request) {
+    @GetMapping("/{boardName}/edit")
+    public String editView(@PathVariable String boardName, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
         // 게시판이 없는 경우
-        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
-        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
+        BoardVO boardVO = boardService.getBoardByName(boardName);
+        if(ObjectUtils.isEmpty(boardVO)) {
             return "error/error";
         }
 
         // 일반 사용자가 관리자 게시판에 등록하려고 할때
-        if("admin".equals(boardNum.getType()) && loginUser.getLevel() != 1) {
+        if("admin".equals(boardVO.getType()) && loginUser.getLevel() != 1) {
             return "error/error";
         }
-
+        model.addAttribute("boardVO", boardVO);
         return "board/edit";
     }
 
-    @PostMapping("/edit")
-    public String edit(@ModelAttribute("postVO") PostVO postVO, FileVO fileVO) throws ServletException, IOException {
-        boardService.postWrite(postVO);
-        FileVO vo = (FileVO) fileStore.uploadFile(postVO.getFile());
+    @PostMapping("/{boardName}/edit")
+    public String edit(@Valid BoardParam.Create createBoardVO, @PathVariable String boardName, FileVO fileVO) throws ServletException, IOException {
+        boardService.postWrite(createBoardVO);
+        FileVO vo = (FileVO) fileStore.uploadFile(createBoardVO.getFile());
         if(vo != null) {
-            fileVO.setPostIdx(postVO.getIdx());
-            fileVO.setBoardIdx(postVO.getBoardIdx());
+            fileVO.setPostIdx(createBoardVO.getIdx());
+            fileVO.setBoardIdx(createBoardVO.getBoardIdx());
             fileVO.setOriginname(vo.getOriginname());
             fileVO.setPath(vo.getPath());
             fileVO.setType(vo.getType());
@@ -111,7 +120,7 @@ public class BoardController {
             fileVO.setUuid(vo.getUuid());
             boardService.postWrite_attach(fileVO);
         }
-        return "redirect:/board/list?boardIdx=" + postVO.getBoardIdx();
+        return "redirect:/board/" + boardName + "/list";
     }
 
     @GetMapping("/attachFile")
@@ -119,25 +128,25 @@ public class BoardController {
         return fileStore.downloadAttach(param);
     }
 
-    @GetMapping("/update")
-    public String updateView(@ModelAttribute("searchVO") PostVO postVO, Model model, HttpServletRequest request) {
+    @GetMapping("/{boardName}/update/{postIdx}")
+    public String updateView(@PathVariable String boardName, @PathVariable int postIdx, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
         // 게시판이 없는 경우
-        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
-        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
+        BoardVO boardVO = boardService.getBoardByName(boardName);
+        if(ObjectUtils.isEmpty(boardVO)) {
             return "error/error";
         }
 
         //게시글이 없는 경우
-        PostVO detailView = boardService.postView(postVO);
+        PostVO detailView = boardService.postView(postIdx);
         if(detailView == null) {
             return "error/error";
         }
 
         // 일반 사용자가 관리자 게시글을 수정하려고 할때
-        if("admin".equals(boardNum.getType()) && loginUser.getLevel() != 1) {
+        if("admin".equals(boardVO.getType()) && loginUser.getLevel() != 1) {
             return "error/error";
         }
 
@@ -146,55 +155,56 @@ public class BoardController {
             return "error/error";
         }
 
-        FileVO detailFile = boardService.postView_attach(postVO.getIdx());
+        FileVO detailFile = boardService.postView_attach(postIdx);
         if(detailFile != null) {
             model.addAttribute("detailFile", detailFile);
         }
+        model.addAttribute("boardVO", boardVO);
         model.addAttribute("detailView", detailView);
         return "board/update";
     }
 
-    @PostMapping("/update")
-    public String update(PostVO postVO, FileVO fileVO) throws ServletException, IOException {
-        FileVO vo = (FileVO) fileStore.uploadFile(postVO.getFile());
+    @PostMapping("/{boardName}/update/{postIdx}")
+    public String update(@Valid BoardParam.Update updateBoardVO, @PathVariable String boardName, @PathVariable int postIdx, FileVO fileVO) throws ServletException, IOException {
+        FileVO vo = (FileVO) fileStore.uploadFile(updateBoardVO.getFile());
         if(vo != null) {
-            fileVO.setPostIdx(postVO.getIdx());
-            fileVO.setBoardIdx(postVO.getBoardIdx());
+            fileVO.setPostIdx(updateBoardVO.getIdx());
+            fileVO.setBoardIdx(updateBoardVO.getBoardIdx());
             fileVO.setOriginname(vo.getOriginname());
             fileVO.setPath(vo.getPath());
             fileVO.setType(vo.getType());
             fileVO.setSize(vo.getSize());
             fileVO.setUuid(vo.getUuid());
-            boardService.deleteFile(postVO.getUuid());
+            boardService.deleteFile(updateBoardVO.getUuid());
             boardService.postWrite_attach(fileVO);
         } else {
-            if(postVO.getUuid() != null && "Y".equals(postVO.getFileDeleteYn())) {
-                boardService.deleteFile(postVO.getUuid());
+            if(updateBoardVO.getUuid() != null && "Y".equals(updateBoardVO.getFileDeleteYn())) {
+                boardService.deleteFile(updateBoardVO.getUuid());
             }
         }
-        boardService.postUpdate(postVO);
-        return "redirect:/board/detail/?boardIdx=" + postVO.getBoardIdx() + "&idx=" + postVO.getIdx();
+        boardService.postUpdate(updateBoardVO);
+        return "redirect:/board/" + boardName + "/detail/" + postIdx;
     }
 
-    @GetMapping("/delete")
-    public String delete(@ModelAttribute("searchVO") PostVO postVO, HttpServletRequest request) {
+    @GetMapping("/{boardName}/delete/{postIdx}")
+    public String delete(@PathVariable String boardName, @PathVariable int postIdx, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
         // 게시판이 없는 경우
-        BoardNumVO boardNum = boardService.boardNumVO(postVO.getBoardIdx());
-        if(boardNum == null || postVO.getBoardIdx() != boardNum.getIdx()) {
+        BoardVO boardVO = boardService.getBoardByName(boardName);
+        if(ObjectUtils.isEmpty(boardVO)) {
             return "error/error";
         }
 
         //게시글이 없는 경우
-        PostVO detailView = boardService.postView(postVO);
+        PostVO detailView = boardService.postView(postIdx);
         if(detailView == null) {
             return "error/error";
         }
 
         // 일반 사용자가 관리자 게시글을 삭제하려고 할때
-        if("admin".equals(boardNum.getType()) && loginUser.getLevel() != 1) {
+        if("admin".equals(boardVO.getType()) && loginUser.getLevel() != 1) {
             return "error/error";
         }
 
@@ -203,7 +213,7 @@ public class BoardController {
             return "error/error";
         }
 
-        boardService.deletePost(postVO.getIdx());
-        return "redirect:/board/list/?boardIdx=" + postVO.getBoardIdx();
+        boardService.deletePost(postIdx);
+        return "redirect:/board/" + boardName + "/list";
     }
 }

@@ -1,5 +1,6 @@
 package com.board.webmvc.service.board;
 
+import com.board.webmvc.controller.board.BoardParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +11,19 @@ import java.util.ArrayList;
 public class BoardService {
     private final BoardMapper boardMapper;
 
-    public BoardNumVO boardNumVO(int boardIdx) {
-        return boardMapper.boardNum(boardIdx);
+    public BoardVO getBoardByName(String boardName) {
+        return boardMapper.getBoardByName(boardName);
     }
 
-    public ArrayList<PostVO> postList(PostVO param) {
-        return boardMapper.postList(param);
+    public ArrayList<PostVO> postList(int boardIdx, BoardParam.Search searchBoardVO) {
+        return boardMapper.postList(boardIdx, searchBoardVO);
     }
 
-    public int getListCnt(PostVO param) {
-        return boardMapper.getListCnt(param);
+    public int getListCnt(int boardIdx, BoardParam.Search searchBoardVO) {
+        return boardMapper.getListCnt(boardIdx, searchBoardVO);
     }
 
-    public PostVO postView(PostVO param) {
+    public PostVO postView(int param) {
         return boardMapper.postView(param);
     }
 
@@ -34,16 +35,16 @@ public class BoardService {
         return boardMapper.attachFileDown(param);
     }
 
-    public void postWrite(PostVO param) {
-        boardMapper.postWrite(param);
+    public void postWrite(BoardParam.Create createBoardVO) {
+        boardMapper.postWrite(createBoardVO);
     }
 
     public void postWrite_attach(FileVO param) {
         boardMapper.postWrite_attach(param);
     }
 
-    public void postUpdate(PostVO param) {
-        boardMapper.postUpdate(param);
+    public void postUpdate(BoardParam.Update updateBoardVO) {
+        boardMapper.postUpdate(updateBoardVO);
     }
 
     public int updateViewCnt(int param) {
