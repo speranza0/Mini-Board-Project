@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter @Setter
 @Builder
-public class FileVO extends PostVO{
+public class FileVO {
 
     private int idx;
 
@@ -23,6 +23,5 @@ public class FileVO extends PostVO{
     private String type;
 
     private String path;
-
 
 }

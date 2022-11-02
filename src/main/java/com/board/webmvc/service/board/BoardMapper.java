@@ -15,9 +15,11 @@ public interface BoardMapper {
 
     int getListCnt(@Param("boardIdx") int boardIdx, @Param("searchBoardVO") BoardParam.Search searchBoardVO);
 
-    PostVO postView(int postVO);
+    BoardParam.Post postView(int postIdx);
 
-    FileVO postView_attach(int postIdx);
+    ArrayList<BoardParam.PreNext> postPreNext(@Param("idx") int postIdx, @Param("boardIdx") int boardIdx);
+
+    BoardParam.Post postView_attach(int postIdx);
 
     FileVO attachFileDown(FileVO fileVO);
 

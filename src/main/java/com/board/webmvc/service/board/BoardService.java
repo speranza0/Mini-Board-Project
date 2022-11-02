@@ -23,12 +23,44 @@ public class BoardService {
         return boardMapper.getListCnt(boardIdx, searchBoardVO);
     }
 
-    public PostVO postView(int param) {
-        return boardMapper.postView(param);
+    public BoardParam.Post postView(int param) {
+        BoardParam.Post vo = new BoardParam.Post();
+        BoardParam.Post fileVo = boardMapper.postView_attach(param);
+        BoardParam.Post postVo = boardMapper.postView(param);
+        boardMapper.updateViewCnt(param);
+
+        BoardParam.Post.PostBuilder postBuilder = vo.builder();
+
+        postBuilder.idx(postVo.getIdx())
+                .boardIdx(postVo.getBoardIdx())
+                .userIdx(postVo.getUserIdx())
+                .title(postVo.getTitle())
+                .content(postVo.getContent())
+                .regdate(postVo.getRegdate())
+                .hit(postVo.getHit())
+                .id(postVo.getId())
+                .nickname(postVo.getNickname());
+
+        if(fileVo != null) {
+            postBuilder.uuid(fileVo.getUuid())
+                    .originname(fileVo.getOriginname())
+                    .size(fileVo.getSize())
+                    .type(fileVo.getType())
+                    .path(fileVo.getPath())
+                    .build();
+        }
+
+        return postBuilder.build();
     }
 
-    public FileVO postView_attach(int postIdx) {
-        return boardMapper.postView_attach(postIdx);
+    public BoardParam.PreNext postPreView(int postIdx, int boardIdx) {
+        ArrayList<BoardParam.PreNext> prev = boardMapper.postPreNext(postIdx, boardIdx);
+        return prev.stream().filter(m -> m.getPostType().equals("prev")).findFirst().orElse(null);
+    }
+
+    public BoardParam.PreNext postNextView(int postIdx, int boardIdx) {
+        ArrayList<BoardParam.PreNext> next = boardMapper.postPreNext(postIdx, boardIdx);
+        return next.stream().filter(m -> m.getPostType().equals("next")).findFirst().orElse(null);
     }
 
     public FileVO attachFileDown(FileVO param) {

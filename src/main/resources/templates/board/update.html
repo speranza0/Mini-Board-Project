@@ -17,8 +17,8 @@
                 <form id="postForm" novalidate="novalidate" method="post" th:action="@{/board/{boardName}/update/{postIdx}(boardName=${boardVO.name}, postIdx=${detailView.idx})}" enctype="multipart/form-data">
                   <input type="hidden" name="boardIdx" th:value="${detailView.boardIdx}" />
                   <input type="hidden" name="idx" th:value="${detailView.idx}" />
-                  <input type="hidden" id="uuid" name="uuid" th:if="${detailFile != null}" th:value="${detailFile.uuid}"/>
-                  <input type="hidden" id="fileDeleteYn" name="fileDeleteYn" th:if="${detailFile != null}" th:value="N">
+                  <input type="hidden" id="uuid" name="uuid" th:if="${detailView.uuid != null}" th:value="${detailView.uuid}"/>
+                  <input type="hidden" id="fileDeleteYn" name="fileDeleteYn" th:if="${detailView.uuid != null}" th:value="N">
                   <input th:if="${session.loginUser != null}" type="hidden" name="userIdx" th:value="${session.loginUser.getIdx()}" />
                   <table class="form-table">
                     <tbody>
@@ -128,10 +128,10 @@
     <script src="/script/common.js"></script>
     <script th:inline="javascript">
       /*<![CDATA[*/
-      var isFile=/*[[${detailFile != null}]]*/ || false;
-      var fileName = /*[[${detailFile != null ? detailFile.getOriginname() : ''}]]*/ || "";
-      var fileType = /*[[${detailFile != null ? detailFile.getType() : ''}]]*/ || "";
-      var fileSize = /*[[${detailFile != null ? detailFile.getSize() : ''}]]*/ || "";
+      var isFile=/*[[${detailView.uuid != null}]]*/ || false;
+      var fileName = /*[[${detailView != null ? detailView.getOriginname() : ''}]]*/ || "";
+      var fileType = /*[[${detailView != null ? detailView.getType() : ''}]]*/ || "";
+      var fileSize = /*[[${detailView != null ? detailView.getSize() : ''}]]*/ || "";
       if(isFile) {
         $(".filename a").html(fileName + "." + fileType);
         $(".size").html(fileSize + " Bytes");

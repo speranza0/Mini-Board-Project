@@ -1,10 +1,7 @@
 package com.board.webmvc.controller.board;
 
 import com.board.webmvc.service.board.PageVO;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
@@ -30,7 +27,57 @@ public class BoardParam {
         }
     }
 
+    // 게시글 상세보기
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter @Setter
+    public static class Post {
 
+        private int idx;
+
+        private int boardIdx;
+
+        private int userIdx;
+
+        private String title;
+
+        private String content;
+
+        private Date regdate;
+
+        private int hit;
+
+        //게시물 정보에 join 한 유저정보
+        private String id;
+
+        private String nickname;
+
+        //게시물 정보에 join 한 첨부파일 정보
+        private String uuid;
+
+        private String originname;
+
+        private int size;
+
+        private String type;
+
+        private String path;
+    }
+
+    // 이전글 다음글
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter @Setter
+    public static class PreNext {
+        private String postType;
+
+        private int idx;
+
+        private String title;
+
+        private Date regdate;
+    }
 
     // 등록
     @NoArgsConstructor
@@ -74,17 +121,19 @@ public class BoardParam {
 
         private Date updatetime;
 
-        //게시물 정보에 join 한 첨부파일 여부
+        //게시물 정보에 join 한 첨부파일 정보
         private String uuid;
 
-        //게시물 첨부파일 삭제 여부
+        private String originname;
+
+        private int size;
+
+        private String type;
+
+        // 게시물 기존 첨부파일 삭제 여부
         private String fileDeleteYn;
 
         //첨부파일을 위한 멀티파트파일
         private MultipartFile file;
     }
-
-
-
-
 }

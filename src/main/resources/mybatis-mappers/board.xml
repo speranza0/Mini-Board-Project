@@ -25,11 +25,19 @@
         <include refid="postSearch"/>
     </select>
 
-    <select id="postView" resultType="com.board.webmvc.service.board.PostVO">
-        SELECT tbp.idx, tbp.board_idx, tbp.user_idx, title, content, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.idx = #{idx}
+    <select id="postView" resultType="com.board.webmvc.controller.board.BoardParam$Post">
+        SELECT * FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx WHERE tbp.idx = #{idx}
     </select>
 
-    <select id="postView_attach" resultType="com.board.webmvc.service.board.FileVO">
+    <select id="postPreNext" resultType="com.board.webmvc.controller.board.BoardParam$PreNext">
+        <![CDATA[
+        (SELECT 'prev' as post_type, tb_post.* FROM tb_post WHERE delete_yn = "N" AND idx < #{idx} AND board_idx = #{boardIdx} ORDER BY idx DESC LIMIT 1)
+        UNION ALL
+        (SELECT 'next' as post_type, tb_post.* FROM tb_post WHERE delete_yn = "N" AND idx > #{idx} AND board_idx = #{boardIdx} ORDER BY idx ASC LIMIT 1)
+        ]]>
+    </select>
+
+    <select id="postView_attach" resultType="com.board.webmvc.controller.board.BoardParam$Post">
         SELECT originname, uuid, tbpf.size, tbpf.type, tbpf.path FROM tb_post_file tbpf WHERE post_idx = #{idx} AND delete_yn = "N"
     </select>
 

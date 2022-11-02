@@ -33,7 +33,7 @@ public class FileStore {
     }
 
     // 파일 업로드 메서드
-    public PostVO uploadFile(MultipartFile file) throws ServletException, IOException {
+    public FileVO uploadFile(MultipartFile file) throws ServletException, IOException {
         if (file.isEmpty()) {
             return null;
         }

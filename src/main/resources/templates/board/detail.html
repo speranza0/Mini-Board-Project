@@ -25,11 +25,11 @@
                 </div>
               </div>
               <div class="file">
-                <ul th:if="${fileView}">
+                <ul th:if="${detailView.uuid}">
                   <li>
                     <a
                       class="link"
-                      th:href="@{/board/attachFile(uuid=${fileView.uuid})}"
+                      th:href="@{/board/attachFile(uuid=${detailView.uuid})}"
                     >
                       <span class="icon">
                         <svg viewBox="0 0 469.333 469.333">
@@ -70,10 +70,10 @@
                           </g>
                         </svg>
                       </span>
-                      <span class="name" th:text="${fileView.originname} + '.' + ${fileView.type}"
+                      <span class="name" th:text="${detailView.originname} + '.' + ${detailView.type}"
                         ></span
                       >
-                      <span class="size" th:text="${fileView.size} + ' Bytes'"></span>
+                      <span class="size" th:text="${detailView.size} + ' Bytes'"></span>
                     </a>
                   </li>
                 </ul>
@@ -87,14 +87,13 @@
                 <a class="button" th:href="@{/board/{boardName}/update/{postIdx}(boardName=${boardVO.name}, postIdx=${detailView.idx})}">수정</a>
                 <a
                   class="button black"
-                  href="javascript:history.back();">
-                  <!--th:href="@{/board/{boardName}/list(boardName=${boardVO.name}, pageIndex=${searchVO.pageIndex}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
-                  -->목록</a
+                  th:href="@{/board/{boardName}/list(boardName=${boardVO.name})}">
+                  목록</a
                 >
               </div>
               <div class="surround">
-                <div class="item prev">
-                  <a href="/">
+                <div th:if="${preView}" class="item prev">
+                  <a th:href="@{/board/{boardName}/detail/{postIdx}(boardName=${boardVO.name}, postIdx=${preView.idx})}">
                     <span class="direction">
                       <svg viewBox="0 0 24 24">
                         <g id="_16" data-name="16">
@@ -105,15 +104,15 @@
                       </svg>
                       <span class="text">이전글</span>
                     </span>
-                    <span class="subject">
+                    <span class="subject" th:text="${preView.title}">
                       [모집] ⌜2022년 환경교육전문가 6차 역량강화교육⌟
                       ‘성인중기·후기 환경교육강사 역량강화교육’ 참가자 모집
                     </span>
-                    <span class="created"> 2022-09-22 </span>
+                    <span class="created" th:text="${#dates.format(preView.regdate, 'yyyy-MM-dd')}"> 2022-09-22 </span>
                   </a>
                 </div>
-                <div class="item next">
-                  <a href="/post/notice/377">
+                <div th:if="${nextView}" class="item next">
+                  <a th:href="@{/board/{boardName}/detail/{postIdx}(boardName=${boardVO.name}, postIdx=${nextView.idx})}">
                     <span class="direction">
                       <svg viewBox="0 0 24 24">
                         <g id="_16" data-name="16">
@@ -124,11 +123,11 @@
                       </svg>
                       <span class="text">다음글</span>
                     </span>
-                    <span class="subject">
+                    <span class="subject" th:text="${nextView.title}">
                       [선정결과] 2022년 지구를 위한 탄소다이어트 9월 지원사업
                       선정결과 공고
                     </span>
-                    <span class="created"> 2022-09-28 </span>
+                    <span class="created" th:text="${#dates.format(nextView.regdate, 'yyyy-MM-dd')}"> 2022-09-28 </span>
                   </a>
                 </div>
               </div>

@@ -11,6 +11,7 @@ import java.util.Date;
 public class PostVO {
 
     //게시물 정보
+
     private int idx;
 
     private int boardIdx;
@@ -34,9 +35,6 @@ public class PostVO {
 
     //게시물 정보에 join 한 첨부파일 여부
     private String uuid;
-
-    //게시물 첨부파일 삭제 여부
-    private String fileDeleteYn;
 
     //첨부파일을 위한 멀티파트파일
     private MultipartFile file;

@@ -4,7 +4,6 @@ import com.board.webmvc.service.board.*;
 import com.board.webmvc.service.user.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,6 +25,7 @@ import java.net.MalformedURLException;
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
+
     private final FileStore fileStore;
 
     @GetMapping("/{boardName}/list")
@@ -73,17 +73,22 @@ public class BoardController {
         if(ObjectUtils.isEmpty(boardVO)) {
             return "error/error";
         }
-        boardService.updateViewCnt(postIdx);
-        PostVO detailView = boardService.postView(postIdx);
-        FileVO fileView = boardService.postView_attach(postIdx);
+        BoardParam.Post detailView = boardService.postView(postIdx);
+        BoardParam.PreNext preView = boardService.postPreView(postIdx, detailView.getBoardIdx());
+        BoardParam.PreNext nextView = boardService.postNextView(postIdx, detailView.getBoardIdx());
 
         if(detailView == null) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
         }
+        if(preView != null) {
+            model.addAttribute("preView", preView);
+        }
+        if(nextView != null) {
+            model.addAttribute("nextView", nextView);
+        }
         model.addAttribute("boardVO", boardVO);
         model.addAttribute("searchVO", searchBoardVO);
         model.addAttribute("detailView", detailView);
-        model.addAttribute("fileView", fileView);
         return "board/detail";
     }
 
@@ -109,7 +114,7 @@ public class BoardController {
     @PostMapping("/{boardName}/edit")
     public String edit(@Valid BoardParam.Create createBoardVO, @PathVariable String boardName, FileVO fileVO) throws ServletException, IOException {
         boardService.postWrite(createBoardVO);
-        FileVO vo = (FileVO) fileStore.uploadFile(createBoardVO.getFile());
+        FileVO vo = fileStore.uploadFile(createBoardVO.getFile());
         if(vo != null) {
             fileVO.setPostIdx(createBoardVO.getIdx());
             fileVO.setBoardIdx(createBoardVO.getBoardIdx());
@@ -140,7 +145,7 @@ public class BoardController {
         }
 
         //게시글이 없는 경우
-        PostVO detailView = boardService.postView(postIdx);
+        BoardParam.Post detailView = boardService.postView(postIdx);
         if(detailView == null) {
             return "error/error";
         }
@@ -155,10 +160,6 @@ public class BoardController {
             return "error/error";
         }
 
-        FileVO detailFile = boardService.postView_attach(postIdx);
-        if(detailFile != null) {
-            model.addAttribute("detailFile", detailFile);
-        }
         model.addAttribute("boardVO", boardVO);
         model.addAttribute("detailView", detailView);
         return "board/update";
@@ -166,7 +167,7 @@ public class BoardController {
 
     @PostMapping("/{boardName}/update/{postIdx}")
     public String update(@Valid BoardParam.Update updateBoardVO, @PathVariable String boardName, @PathVariable int postIdx, FileVO fileVO) throws ServletException, IOException {
-        FileVO vo = (FileVO) fileStore.uploadFile(updateBoardVO.getFile());
+        FileVO vo = fileStore.uploadFile(updateBoardVO.getFile());
         if(vo != null) {
             fileVO.setPostIdx(updateBoardVO.getIdx());
             fileVO.setBoardIdx(updateBoardVO.getBoardIdx());
@@ -198,7 +199,7 @@ public class BoardController {
         }
 
         //게시글이 없는 경우
-        PostVO detailView = boardService.postView(postIdx);
+        BoardParam.Post detailView = boardService.postView(postIdx);
         if(detailView == null) {
             return "error/error";
         }
