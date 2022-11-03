@@ -1,9 +1,7 @@
 package com.board.webmvc.service.board;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,20 +19,4 @@ public class PageVO {
     private int realEnd = 0; //페이징 마지막 숫자
     private boolean prev, next; // 이전, 다음버튼
 
-    @Override
-    public String toString() {
-        return "PageVO{" +
-                "pageIndex=" + pageIndex +
-                ", pageUnit=" + pageUnit +
-                ", pageSize=" + pageSize +
-                ", firstIndex=" + firstIndex +
-                ", recordCountPerPage=" + recordCountPerPage +
-                ", totCnt=" + totCnt +
-                ", startData=" + startData +
-                ", endData=" + endData +
-                ", realEnd=" + realEnd +
-                ", prev=" + prev +
-                ", next=" + next +
-                '}';
-    }
 }

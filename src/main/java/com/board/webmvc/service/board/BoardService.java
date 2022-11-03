@@ -2,20 +2,28 @@ package com.board.webmvc.service.board;
 
 import com.board.webmvc.controller.board.BoardParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardMapper boardMapper;
 
+    private final FileStore fileStore;
+
     public BoardVO getBoardByName(String boardName) {
         return boardMapper.getBoardByName(boardName);
     }
 
-    public ArrayList<PostVO> postList(int boardIdx, BoardParam.Search searchBoardVO) {
+    public List<PostVO> postList(int boardIdx, BoardParam.Search searchBoardVO) {
         return boardMapper.postList(boardIdx, searchBoardVO);
     }
 
@@ -49,45 +57,52 @@ public class BoardService {
                     .path(fileVo.getPath())
                     .build();
         }
-
         return postBuilder.build();
     }
 
     public BoardParam.PreNext postPreView(int postIdx, int boardIdx) {
-        ArrayList<BoardParam.PreNext> prev = boardMapper.postPreNext(postIdx, boardIdx);
+        List<BoardParam.PreNext> prev = boardMapper.postPreNext(postIdx, boardIdx);
         return prev.stream().filter(m -> m.getPostType().equals("prev")).findFirst().orElse(null);
     }
 
     public BoardParam.PreNext postNextView(int postIdx, int boardIdx) {
-        ArrayList<BoardParam.PreNext> next = boardMapper.postPreNext(postIdx, boardIdx);
+        List<BoardParam.PreNext> next = boardMapper.postPreNext(postIdx, boardIdx);
         return next.stream().filter(m -> m.getPostType().equals("next")).findFirst().orElse(null);
     }
 
-    public FileVO attachFileDown(FileVO param) {
-        return boardMapper.attachFileDown(param);
+    public ResponseEntity<Resource> attachFileDown(FileVO param) throws MalformedURLException {
+        return fileStore.downloadAttach(param);
     }
 
-    public void postWrite(BoardParam.Create createBoardVO) {
+    @Transactional
+    public void postWrite(BoardParam.Create createBoardVO) throws ServletException, IOException {
         boardMapper.postWrite(createBoardVO);
+        FileVO vo = fileStore.uploadFile(createBoardVO.getFile());
+        if(vo != null) {
+            vo.setPostIdx(createBoardVO.getIdx());
+            vo.setBoardIdx(createBoardVO.getBoardIdx());
+            boardMapper.postWrite_attach(vo);
+        }
     }
 
-    public void postWrite_attach(FileVO param) {
-        boardMapper.postWrite_attach(param);
-    }
-
-    public void postUpdate(BoardParam.Update updateBoardVO) {
+    @Transactional
+    public void postUpdate(BoardParam.Update updateBoardVO) throws ServletException, IOException {
+        FileVO vo = fileStore.uploadFile(updateBoardVO.getFile());
+        if(vo != null) {
+            vo.setPostIdx(updateBoardVO.getIdx());
+            vo.setBoardIdx(updateBoardVO.getBoardIdx());
+            boardMapper.deleteFile(updateBoardVO.getUuid());
+            boardMapper.postWrite_attach(vo);
+        } else {
+            if(updateBoardVO.getUuid() != null && "Y".equals(updateBoardVO.getFileDeleteYn())) {
+                boardMapper.deleteFile(updateBoardVO.getUuid());
+            }
+        }
         boardMapper.postUpdate(updateBoardVO);
-    }
-
-    public int updateViewCnt(int param) {
-        return boardMapper.updateViewCnt(param);
     }
 
     public void deletePost(int param) {
         boardMapper.deletePost(param);
     }
 
-    public void deleteFile(String param) {
-        boardMapper.deleteFile(param);
-    }
 }

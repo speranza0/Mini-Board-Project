@@ -1,8 +1,11 @@
 package com.board.webmvc.service.board;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter @Setter
 public class Pagination {
     private int currentPageNo; // 현재 페이지 번호
     private int recordCountPerPage; // 한 페이지당 게시되는 게시물 수
@@ -34,6 +37,7 @@ public class Pagination {
     }
 
     public int getFirstRecordIndex() {
+        //현재 페이지 게시글 시작 번호 = (현재 페이지 번호 -1) * 페이지당 게시글 갯수
         firstRecordIndex = (getCurrentPageNo() - 1) * getRecordCountPerPage();
         return firstRecordIndex;
     }

@@ -4,20 +4,20 @@ import com.board.webmvc.controller.board.BoardParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Mapper
 public interface BoardMapper {
 
     BoardVO getBoardByName(String boardName);
 
-    ArrayList<PostVO> postList(@Param("boardIdx") int boardIdx, @Param("searchBoardVO") BoardParam.Search searchBoardVO);
+    List<PostVO> postList(@Param("boardIdx") int boardIdx, @Param("searchBoardVO") BoardParam.Search searchBoardVO);
 
     int getListCnt(@Param("boardIdx") int boardIdx, @Param("searchBoardVO") BoardParam.Search searchBoardVO);
 
     BoardParam.Post postView(int postIdx);
 
-    ArrayList<BoardParam.PreNext> postPreNext(@Param("idx") int postIdx, @Param("boardIdx") int boardIdx);
+    List<BoardParam.PreNext> postPreNext(@Param("idx") int postIdx, @Param("boardIdx") int boardIdx);
 
     BoardParam.Post postView_attach(int postIdx);
 

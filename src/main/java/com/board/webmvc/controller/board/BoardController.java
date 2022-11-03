@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,30 +27,24 @@ import java.net.MalformedURLException;
 public class BoardController {
     private final BoardService boardService;
 
-    private final FileStore fileStore;
-
     @GetMapping("/{boardName}/list")
     public String listView(BoardParam.Search searchBoardVO, @PathVariable String boardName, Model model) {
-
+        //게시판이 없는 경우
         BoardVO boardVO = boardService.getBoardByName(boardName);
-
         if(ObjectUtils.isEmpty(boardVO)) {
             return "error/error";
         }
 
         //페이징[s]
+        int totCnt = boardService.getListCnt(boardVO.getIdx(), searchBoardVO);
         Pagination pagination = new Pagination();
+        pagination.setTotalRecordCount(totCnt);
         pagination.setCurrentPageNo(searchBoardVO.getPageIndex());
         pagination.setRecordCountPerPage(searchBoardVO.getPageUnit());
         pagination.setPageSize(searchBoardVO.getPageSize());
 
         searchBoardVO.setFirstIndex(pagination.getFirstRecordIndex());
         searchBoardVO.setRecordCountPerPage(pagination.getRecordCountPerPage());
-
-        int totCnt = boardService.getListCnt(boardVO.getIdx(), searchBoardVO);
-
-        pagination.setTotalRecordCount(totCnt);
-
         searchBoardVO.setEndData(pagination.getLastPageNoOnPageList());
         searchBoardVO.setStartData(pagination.getFirstPageNoOnPageList());
         searchBoardVO.setPrev(pagination.getXprev());
@@ -57,7 +52,6 @@ public class BoardController {
 
         model.addAttribute("boardVO", boardVO);
         model.addAttribute("searchVO", searchBoardVO);
-        log.info("searchBoardVO {}",searchBoardVO);
         model.addAttribute("postList", boardService.postList(boardVO.getIdx(), searchBoardVO));
         model.addAttribute("totCnt",totCnt);
         model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)searchBoardVO.getPageUnit()));
@@ -68,22 +62,23 @@ public class BoardController {
 
     @GetMapping("/{boardName}/detail/{postIdx}")
     public String detailView(BoardParam.Search searchBoardVO, @PathVariable String boardName, @PathVariable int postIdx, Model model) {
+        // 게시판이 없는 경우
         BoardVO boardVO = boardService.getBoardByName(boardName);
-
         if(ObjectUtils.isEmpty(boardVO)) {
             return "error/error";
         }
+
         BoardParam.Post detailView = boardService.postView(postIdx);
         BoardParam.PreNext preView = boardService.postPreView(postIdx, detailView.getBoardIdx());
         BoardParam.PreNext nextView = boardService.postNextView(postIdx, detailView.getBoardIdx());
 
-        if(detailView == null) {
+        if(ObjectUtils.isEmpty(detailView)) {
             throw new RuntimeException("게시글을 찾을 수 없습니다.");
         }
-        if(preView != null) {
+        if(!ObjectUtils.isEmpty(preView)) {
             model.addAttribute("preView", preView);
         }
-        if(nextView != null) {
+        if(!ObjectUtils.isEmpty(nextView)) {
             model.addAttribute("nextView", nextView);
         }
         model.addAttribute("boardVO", boardVO);
@@ -112,25 +107,15 @@ public class BoardController {
     }
 
     @PostMapping("/{boardName}/edit")
-    public String edit(@Valid BoardParam.Create createBoardVO, @PathVariable String boardName, FileVO fileVO) throws ServletException, IOException {
+    public String edit(@Valid BoardParam.Create createBoardVO, @PathVariable String boardName, RedirectAttributes redirectAttributes) throws ServletException, IOException {
         boardService.postWrite(createBoardVO);
-        FileVO vo = fileStore.uploadFile(createBoardVO.getFile());
-        if(vo != null) {
-            fileVO.setPostIdx(createBoardVO.getIdx());
-            fileVO.setBoardIdx(createBoardVO.getBoardIdx());
-            fileVO.setOriginname(vo.getOriginname());
-            fileVO.setPath(vo.getPath());
-            fileVO.setType(vo.getType());
-            fileVO.setSize(vo.getSize());
-            fileVO.setUuid(vo.getUuid());
-            boardService.postWrite_attach(fileVO);
-        }
-        return "redirect:/board/" + boardName + "/list";
+        redirectAttributes.addAttribute("boardName", boardName);
+        return "redirect:/board/{boardName}/list";
     }
 
     @GetMapping("/attachFile")
     public ResponseEntity<Resource> attachFile(FileVO param) throws MalformedURLException {
-        return fileStore.downloadAttach(param);
+        return boardService.attachFileDown(param);
     }
 
     @GetMapping("/{boardName}/update/{postIdx}")
@@ -146,7 +131,7 @@ public class BoardController {
 
         //게시글이 없는 경우
         BoardParam.Post detailView = boardService.postView(postIdx);
-        if(detailView == null) {
+        if(ObjectUtils.isEmpty(detailView)) {
             return "error/error";
         }
 
@@ -166,29 +151,15 @@ public class BoardController {
     }
 
     @PostMapping("/{boardName}/update/{postIdx}")
-    public String update(@Valid BoardParam.Update updateBoardVO, @PathVariable String boardName, @PathVariable int postIdx, FileVO fileVO) throws ServletException, IOException {
-        FileVO vo = fileStore.uploadFile(updateBoardVO.getFile());
-        if(vo != null) {
-            fileVO.setPostIdx(updateBoardVO.getIdx());
-            fileVO.setBoardIdx(updateBoardVO.getBoardIdx());
-            fileVO.setOriginname(vo.getOriginname());
-            fileVO.setPath(vo.getPath());
-            fileVO.setType(vo.getType());
-            fileVO.setSize(vo.getSize());
-            fileVO.setUuid(vo.getUuid());
-            boardService.deleteFile(updateBoardVO.getUuid());
-            boardService.postWrite_attach(fileVO);
-        } else {
-            if(updateBoardVO.getUuid() != null && "Y".equals(updateBoardVO.getFileDeleteYn())) {
-                boardService.deleteFile(updateBoardVO.getUuid());
-            }
-        }
+    public String update(@Valid BoardParam.Update updateBoardVO, @PathVariable String boardName, @PathVariable int postIdx, RedirectAttributes redirectAttributes) throws ServletException, IOException {
         boardService.postUpdate(updateBoardVO);
-        return "redirect:/board/" + boardName + "/detail/" + postIdx;
+        redirectAttributes.addAttribute("boardName", boardName);
+        redirectAttributes.addAttribute("postIdx", postIdx);
+        return "redirect:/board/{boardName}/detail/{postIdx}";
     }
 
     @GetMapping("/{boardName}/delete/{postIdx}")
-    public String delete(@PathVariable String boardName, @PathVariable int postIdx, HttpServletRequest request) {
+    public String delete(@PathVariable String boardName, @PathVariable int postIdx, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession();
         UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
@@ -200,7 +171,7 @@ public class BoardController {
 
         //게시글이 없는 경우
         BoardParam.Post detailView = boardService.postView(postIdx);
-        if(detailView == null) {
+        if(ObjectUtils.isEmpty(detailView)) {
             return "error/error";
         }
 
@@ -215,6 +186,7 @@ public class BoardController {
         }
 
         boardService.deletePost(postIdx);
-        return "redirect:/board/" + boardName + "/list";
+        redirectAttributes.addAttribute("boardName", boardName);
+        return "redirect:/board/{boardName}/list";
     }
 }

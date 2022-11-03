@@ -22,7 +22,7 @@ import java.util.UUID;
 public class FileStore {
 
     @Autowired
-    private BoardService boardService;
+    private BoardMapper boardMapper;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -79,7 +79,7 @@ public class FileStore {
 
     // 첨부파일 다운로드 메서드
     public ResponseEntity<Resource> downloadAttach(@PathVariable FileVO param) throws MalformedURLException {
-        FileVO vo = boardService.attachFileDown(param);
+        FileVO vo = boardMapper.attachFileDown(param);
         String uploadFileName = vo.getOriginname();
         String fileType = vo.getType();
 

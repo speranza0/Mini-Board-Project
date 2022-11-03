@@ -2,6 +2,7 @@ package com.board.webmvc.controller.board;
 
 import com.board.webmvc.service.board.PageVO;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
@@ -17,14 +18,6 @@ public class BoardParam {
         private String searchType;
         private String searchValue;
 
-        @Override
-        public String toString() {
-
-            return "Search{" +
-                    "searchType='" + searchType + '\'' +
-                    ", searchValue='" + searchValue + '\'' +
-                    '}' + super.toString();
-        }
     }
 
     // 게시글 상세보기

@@ -105,10 +105,9 @@
                       <span class="text">이전글</span>
                     </span>
                     <span class="subject" th:text="${preView.title}">
-                      [모집] ⌜2022년 환경교육전문가 6차 역량강화교육⌟
-                      ‘성인중기·후기 환경교육강사 역량강화교육’ 참가자 모집
+                      이전글 제목
                     </span>
-                    <span class="created" th:text="${#dates.format(preView.regdate, 'yyyy-MM-dd')}"> 2022-09-22 </span>
+                    <span class="created" th:text="${#dates.format(preView.regdate, 'yyyy-MM-dd')}"> 이전글 등록일 </span>
                   </a>
                 </div>
                 <div th:if="${nextView}" class="item next">
@@ -124,10 +123,9 @@
                       <span class="text">다음글</span>
                     </span>
                     <span class="subject" th:text="${nextView.title}">
-                      [선정결과] 2022년 지구를 위한 탄소다이어트 9월 지원사업
-                      선정결과 공고
+                      다음글 제목
                     </span>
-                    <span class="created" th:text="${#dates.format(nextView.regdate, 'yyyy-MM-dd')}"> 2022-09-28 </span>
+                    <span class="created" th:text="${#dates.format(nextView.regdate, 'yyyy-MM-dd')}"> 다음글 등록일 </span>
                   </a>
                 </div>
               </div>
