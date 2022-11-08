@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 public class BoardController {
     private final BoardService boardService;
 
+    //리스트 페이지 조회
     @GetMapping("/{boardName}/list")
     public String listView(BoardParam.Search searchBoardVO, @PathVariable String boardName, Model model) {
         //게시판이 없는 경우
@@ -40,6 +41,7 @@ public class BoardController {
         Pagination pagination = new Pagination();
         pagination.setPageVO(searchBoardVO);
         pagination.setTotalRecordCount(totCnt);
+        //페이징[e]
 
         model.addAttribute("boardVO", boardVO);
         model.addAttribute("searchVO", searchBoardVO);
@@ -47,10 +49,11 @@ public class BoardController {
         model.addAttribute("totCnt",totCnt);
         model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)searchBoardVO.getRecordCountPerPage()));
         model.addAttribute("pagination",pagination);
-        //페이징[e]
+        
         return "board/list";
     }
 
+    //상세페이지 조회
     @GetMapping("/{boardName}/detail/{postIdx}")
     public String detailView(BoardParam.Search searchBoardVO, @PathVariable String boardName, @PathVariable int postIdx, Model model) {
         // 게시판이 없는 경우
@@ -78,6 +81,7 @@ public class BoardController {
         return "board/detail";
     }
 
+    // 글쓰기 페이지 조회
     @GetMapping("/{boardName}/edit")
     public String editView(@PathVariable String boardName, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
@@ -97,6 +101,7 @@ public class BoardController {
         return "board/edit";
     }
 
+    //글쓰기 등록
     @PostMapping("/{boardName}/edit")
     public String edit(@Valid BoardParam.Create createBoardVO, @PathVariable String boardName, RedirectAttributes redirectAttributes) throws ServletException, IOException {
         boardService.postWrite(createBoardVO);
@@ -104,11 +109,13 @@ public class BoardController {
         return "redirect:/board/{boardName}/list";
     }
 
+    //첨부파일 다운로드
     @GetMapping("/attachFile")
     public ResponseEntity<Resource> attachFile(FileVO param) throws MalformedURLException {
         return boardService.attachFileDown(param);
     }
 
+    //수정페이지 조회
     @GetMapping("/{boardName}/update/{postIdx}")
     public String updateView(@PathVariable String boardName, @PathVariable int postIdx, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
@@ -141,6 +148,7 @@ public class BoardController {
         return "board/update";
     }
 
+    //수정 등록
     @PostMapping("/{boardName}/update/{postIdx}")
     public String update(@Valid BoardParam.Update updateBoardVO, @PathVariable String boardName, @PathVariable int postIdx, RedirectAttributes redirectAttributes) throws ServletException, IOException {
         boardService.postUpdate(updateBoardVO);
@@ -149,6 +157,7 @@ public class BoardController {
         return "redirect:/board/{boardName}/detail/{postIdx}";
     }
 
+    //게시글 삭제
     @GetMapping("/{boardName}/delete/{postIdx}")
     public String delete(@PathVariable String boardName, @PathVariable int postIdx, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession();

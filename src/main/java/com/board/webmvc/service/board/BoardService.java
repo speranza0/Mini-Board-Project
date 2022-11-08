@@ -19,18 +19,22 @@ public class BoardService {
 
     private final FileStore fileStore;
 
+    // 게시판 정보 조회
     public BoardVO getBoardByName(String boardName) {
         return boardMapper.getBoardByName(boardName);
     }
 
+    // 게시판 게시글 리스트 조회
     public List<PostVO> postList(int boardIdx, BoardParam.Search searchBoardVO) {
         return boardMapper.postList(boardIdx, searchBoardVO);
     }
 
+    // 게시판 게시글 리스트 조회된 갯수
     public int getListCnt(int boardIdx, BoardParam.Search searchBoardVO) {
         return boardMapper.getListCnt(boardIdx, searchBoardVO);
     }
 
+    // 게시글 상세 페이지 조회
     public BoardParam.Post postView(int param) {
         BoardParam.Post vo = new BoardParam.Post();
         BoardParam.Post fileVo = boardMapper.postView_attach(param);
@@ -60,20 +64,24 @@ public class BoardService {
         return postBuilder.build();
     }
 
+    // 상세 페이지 이전글 보여주기
     public BoardParam.PreNext postPreView(int postIdx, int boardIdx) {
         List<BoardParam.PreNext> prev = boardMapper.postPreNext(postIdx, boardIdx);
         return prev.stream().filter(m -> m.getPostType().equals("prev")).findFirst().orElse(null);
     }
 
+    //상세 페이지 다음글 보여주기
     public BoardParam.PreNext postNextView(int postIdx, int boardIdx) {
         List<BoardParam.PreNext> next = boardMapper.postPreNext(postIdx, boardIdx);
         return next.stream().filter(m -> m.getPostType().equals("next")).findFirst().orElse(null);
     }
 
+    // 첨부파일 다운로드
     public ResponseEntity<Resource> attachFileDown(FileVO param) throws MalformedURLException {
         return fileStore.downloadAttach(param);
     }
 
+    // 글쓰기 등록
     @Transactional
     public void postWrite(BoardParam.Create createBoardVO) throws ServletException, IOException {
         boardMapper.postWrite(createBoardVO);
@@ -85,6 +93,7 @@ public class BoardService {
         }
     }
 
+    // 글 수정 등록
     @Transactional
     public void postUpdate(BoardParam.Update updateBoardVO) throws ServletException, IOException {
         FileVO vo = fileStore.uploadFile(updateBoardVO.getFile());
@@ -101,6 +110,7 @@ public class BoardService {
         boardMapper.postUpdate(updateBoardVO);
     }
 
+    // 게시글 삭제
     public void deletePost(int param) {
         boardMapper.deletePost(param);
     }

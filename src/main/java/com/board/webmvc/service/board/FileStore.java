@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
-import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,7 +32,7 @@ public class FileStore {
     }
 
     // 파일 업로드 메서드
-    public FileVO uploadFile(MultipartFile file) throws ServletException, IOException {
+    public FileVO uploadFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             return null;
         }
