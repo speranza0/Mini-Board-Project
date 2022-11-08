@@ -117,16 +117,16 @@
                         ><i class="mdi mdi-chevron-double-left"></i
                       ></a>
                     </li>
-                    <li class="page-item" th:if="${searchVO.prev}">
-                      <a class="page-link" th:href="@{/board/{boardName}/list(boardName=${boardVO.name}, pageIndex=${searchVO.startData - 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
+                    <li class="page-item" th:if="${pagination.xprev}">
+                      <a class="page-link" th:href="@{/board/{boardName}/list(boardName=${boardVO.name}, pageIndex=${pagination.startPage - 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
                         ><i class="mdi mdi-chevron-left"></i
                       ></a>
                     </li>
-                    <li class="page-item" th:each="i : ${#numbers.sequence(searchVO.startData, searchVO.endData)}">
+                    <li class="page-item" th:each="i : ${#numbers.sequence(pagination.startPage, pagination.endPage)}">
                       <a class="page-link" th:href="@{/board/{boardName}/list(boardName=${boardVO.name}, pageIndex=${i}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}" th:text="${i}" th:title="${i}"></a>
                     </li>
-                    <li class="page-item" th:if="${searchVO.next}">
-                      <a class="page-link paginator-next" th:href="@{/board/{boardName}/list(boardName=${boardVO.name}, pageIndex=${searchVO.endData + 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
+                    <li class="page-item" th:if="${pagination.xnext}">
+                      <a class="page-link paginator-next" th:href="@{/board/{boardName}/list(boardName=${boardVO.name}, pageIndex=${pagination.endPage + 1}, searchType=${searchVO.searchType}, searchValue=${searchVO.searchValue})}"
                         ><i class="mdi mdi-chevron-right"></i
                       ></a>
                     </li>

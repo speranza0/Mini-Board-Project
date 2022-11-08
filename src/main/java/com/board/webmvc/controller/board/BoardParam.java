@@ -17,7 +17,6 @@ public class BoardParam {
     public static class Search extends PageVO {
         private String searchType;
         private String searchValue;
-
     }
 
     // 게시글 상세보기

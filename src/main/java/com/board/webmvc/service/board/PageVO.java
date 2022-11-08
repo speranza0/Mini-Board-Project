@@ -3,20 +3,41 @@ package com.board.webmvc.service.board;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter @Setter
 public class PageVO {
 
-    private Integer pageIndex = 1; // 현재 페이지
-    private int pageUnit = 10; //페이지 갯수
-    private int pageSize = 10; //페이지 사이즈
-    private int firstIndex = 1; // 첫번째 인덱스
-    private int recordCountPerPage = 10; // 한페이지당 게시되는 게시물 수
-    private int totCnt = 0; //총 갯수
-    private int startData = 0; //시작 데이터
-    private int endData = 1; //종료 데이터
-    private int realEnd = 0; //페이징 마지막 숫자
-    private boolean prev, next; // 이전, 다음버튼
+    private int pageIndex; // 현재 페이지
+    private int recordCountPerPage; // 한페이지당 게시되는 게시물 수
 
+    public int getPageStart() {
+        return (this.pageIndex - 1) * recordCountPerPage;
+    }
+
+    // 기본 생성자 -> 기본 세팅 : pageIndex = 1, recordCountPerPage = 10
+    public PageVO() {
+        this.pageIndex = 1;
+        this.recordCountPerPage = 10;
+    }
+
+    public PageVO(int pageIndex, int recordCountPerPage) {
+        this.pageIndex = pageIndex;
+        this.recordCountPerPage = recordCountPerPage;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        if(pageIndex <= 0) {
+            this.pageIndex = 1;
+        } else {
+            this.pageIndex = pageIndex;
+        }
+    }
+
+    public void setRecordCountPerPage(int pageCount) {
+        int cnt = this.recordCountPerPage;
+        if(pageCount != cnt) {
+            this.recordCountPerPage = cnt;
+        } else {
+            this.recordCountPerPage = pageCount;
+        }
+    }
 }

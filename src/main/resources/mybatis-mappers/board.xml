@@ -17,7 +17,7 @@
     <select id="postList" resultType="com.board.webmvc.service.board.PostVO">
         SELECT tbp.idx, title, tbpf.uuid, tbu.nickname, tbp.regdate, hit FROM tb_post tbp LEFT JOIN tb_user tbu ON tbp.user_idx = tbu.idx LEFT JOIN tb_post_file tbpf ON tbp.idx = tbpf.post_idx AND tbpf.delete_yn = "N" WHERE tbp.delete_yn = "N" AND tbp.board_idx = #{boardIdx}
         <include refid="postSearch"/>
-        ORDER BY idx desc LIMIT #{searchBoardVO.recordCountPerPage} OFFSET #{searchBoardVO.firstIndex}
+        ORDER BY idx desc LIMIT #{searchBoardVO.recordCountPerPage} OFFSET #{searchBoardVO.pageStart}
     </select>
 
     <select id="getListCnt" resultType="java.lang.Integer">

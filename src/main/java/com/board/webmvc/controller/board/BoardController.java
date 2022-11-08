@@ -38,23 +38,14 @@ public class BoardController {
         //페이징[s]
         int totCnt = boardService.getListCnt(boardVO.getIdx(), searchBoardVO);
         Pagination pagination = new Pagination();
+        pagination.setPageVO(searchBoardVO);
         pagination.setTotalRecordCount(totCnt);
-        pagination.setCurrentPageNo(searchBoardVO.getPageIndex());
-        pagination.setRecordCountPerPage(searchBoardVO.getPageUnit());
-        pagination.setPageSize(searchBoardVO.getPageSize());
-
-        searchBoardVO.setFirstIndex(pagination.getFirstRecordIndex());
-        searchBoardVO.setRecordCountPerPage(pagination.getRecordCountPerPage());
-        searchBoardVO.setEndData(pagination.getLastPageNoOnPageList());
-        searchBoardVO.setStartData(pagination.getFirstPageNoOnPageList());
-        searchBoardVO.setPrev(pagination.getXprev());
-        searchBoardVO.setNext(pagination.getXnext());
 
         model.addAttribute("boardVO", boardVO);
         model.addAttribute("searchVO", searchBoardVO);
         model.addAttribute("postList", boardService.postList(boardVO.getIdx(), searchBoardVO));
         model.addAttribute("totCnt",totCnt);
-        model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)searchBoardVO.getPageUnit()));
+        model.addAttribute("totalPageCnt",(int)Math.ceil(totCnt / (double)searchBoardVO.getRecordCountPerPage()));
         model.addAttribute("pagination",pagination);
         //페이징[e]
         return "board/list";
